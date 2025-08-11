@@ -1,0 +1,11 @@
+{
+  "extends": ["@rihal-om"],
+  "rules": {
+    "react/react-in-jsx-scope": 0,
+    "react/jsx-handler-names": 0,
+    "react/prop-types": 0
+  },
+  "parserOptions": {
+    "project": ["./tsconfig.json"]
+  }
+}

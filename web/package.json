@@ -1,0 +1,67 @@
+{
+  "name": "jf-waqf",
+  "version": "0.1.0",
+  "description": "Jabir Foundation - Waqf",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint:ci": "eslint -f rdjson src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rihal-om/jf-waqf.git"
+  },
+  "author": "Ali Al Harrasi <ali.Harassi@rihal.om>",
+  "license": "ISC",
+  "prettier": "@rihal-om/prettier-config",
+  "bugs": {
+    "url": "https://github.com/rihal-om/jf-waqf.git/issues"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@mantine/core": "^6.0.15",
+    "@mantine/dates": "^6.0.15",
+    "@mantine/form": "^6.0.15",
+    "@mantine/hooks": "^6.0.15",
+    "@mantine/modals": "^6.0.15",
+    "@mantine/nprogress": "^6.0.15",
+    "@tabler/icons-react": "^2.24.0",
+    "@tiptap/extension-link": "^2.0.3",
+    "@tiptap/react": "^2.0.3",
+    "@tiptap/starter-kit": "^2.0.3",
+    "@types/jest": "^29.5.2",
+    "@vitejs/plugin-react-swc": "^3.3.2",
+    "autoprefixer": "^10.4.15",
+    "axios": "^1.4.0",
+    "axios-case-converter": "^1.1.0",
+    "clsx": "^2.0.0",
+    "dayjs": "^1.11.9",
+    "echarts": "^5.4.3",
+    "echarts-for-react": "^3.0.2",
+    "embla-carousel-react": "^7.1.0",
+    "hamburger-react": "^2.5.0",
+    "keycloak-js": "^21.1.2",
+    "mantine-react-table": "^1.0.0",
+    "postcss": "^8.4.28",
+    "prettier": "^2.8.8",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.14.1",
+    "sass": "^1.63.6",
+    "stylis": "^4.3.0",
+    "stylis-plugin-rtl": "^2.1.1",
+    "swr": "^2.2.0",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.1.6",
+    "vite": "^4.3.9",
+    "zod": "^3.21.4",
+    "@types/node": "^20.3.3",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6"
+  },
+  "devDependencies": {
+    "eslint-formatter-rdjson": "^1.0.6"
+  }
+}

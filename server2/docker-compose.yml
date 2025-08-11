@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=jabir_waqf
+      - DB_SSLMODE=disable
+      - PORT=8080
+      - APP_ENV=development
+      - KEYCLOAK_URL=https://keycloak-02.rihal.tech
+      - KEYCLOAK_REALM=apps
+      - KEYCLOAK_CLIENT_ID=jw-app
+      - KEYCLOAK_CLIENT_SECRET=Ou2YGQbmyX8gIca6av4N9voTLTJcOf1i
+      - KEYCLOAK_TOKEN_URL=https://keycloak-02.rihal.tech/auth/realms/apps/protocol/openid-connect/token
+      - JWT_SECRET=your-secret-key-change-this-in-production
+    depends_on:
+      - postgres
+    networks:
+      - jabir-waqf-network
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=jabir_waqf
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    networks:
+      - jabir-waqf-network
+
+volumes:
+  postgres_data:
+
+networks:
+  jabir-waqf-network:
+    driver: bridge
