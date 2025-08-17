@@ -39,7 +39,7 @@ const OrgCard = ({ data }: CardComponentProps): JSX.Element => {
     `organizations/donations/${data.id}/total`
   )
 
-  const percentagePaid = totalValue && donations ? (donations / totalValue) * 100 : 0
+  const percentagePaid = totalValue && donations && totalValue > 0 ? (donations / totalValue) * 100 : 0
 
   return (
     <Card className={classes.card} p="2rem">
@@ -88,8 +88,8 @@ const OrgCard = ({ data }: CardComponentProps): JSX.Element => {
       </Group>
 
       <Progress
-        value={percentagePaid}
-        label={percentagePaid ? `${percentagePaid.toFixed(0)}%` : ''}
+        value={Math.min(percentagePaid || 0, 100)}
+        label={percentagePaid > 0 ? `${Math.min(percentagePaid, 100).toFixed(0)}%` : '0%'}
         color="#53B4AE"
         size="0.8rem"
         className={classes.progress}

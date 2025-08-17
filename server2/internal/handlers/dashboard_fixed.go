@@ -42,22 +42,26 @@ func (h *DashboardHandler) GetDashboardReport(c *fiber.Ctx) error {
 	})
 }
 
-func (h *DashboardHandler) GetWaqfTypeDonatedReport(c *fiber.Ctx) error {
-	reports, err := h.queries.GetWaqfTypeDonatedReport(context.Background())
+func (h *DashboardHandler) GetDonationTypesReport(c *fiber.Ctx) error {
+	reports, err := h.queries.GetDonationTypesReport(context.Background())
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.APIResponse{
 			Success: false,
-			Error:   "Failed to fetch waqf type donated report",
+			Error:   "Failed to fetch donation types report",
 		})
 	}
 
-	var response []models.WaqfTypeDonatedReportResponse
+	var response []models.DonationTypesReportResponse
 	for _, report := range reports {
-		response = append(response, models.WaqfTypeDonatedReportResponse{
-			ID:          report.ID,
-			Name:        report.Name,
-			TotalWaqfs:  report.TotalWaqfs,
-			TotalAmount: interfaceToDecimal(report.TotalAmount),
+		donationType := "regular"
+		if report.DonationType != nil {
+			donationType = *report.DonationType
+		}
+
+		response = append(response, models.DonationTypesReportResponse{
+			DonationType:   donationType,
+			TotalDonations: report.TotalDonations,
+			TotalAmount:    interfaceToDecimal(report.TotalAmount),
 		})
 	}
 

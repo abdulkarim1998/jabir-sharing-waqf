@@ -42,13 +42,13 @@ SELECT COALESCE(SUM(value), 0) as total_value FROM projects
 WHERE organization_id = $1 AND is_active = true;
 
 -- name: GetOrganizationDonorsCount :one
-SELECT COUNT(DISTINCT donor_name) as count FROM waqfs w
-JOIN projects p ON w.project_id = p.id
-WHERE p.organization_id = $1;
+SELECT COUNT(DISTINCT donor_email) as count FROM donations d
+JOIN projects p ON d.project_id = p.id
+WHERE p.organization_id = $1 AND d.payment_status = 'Completed';
 
 -- name: GetOrganizationTotalDonations :one
-SELECT COALESCE(SUM(w.total_amount), 0) as total_donations FROM waqfs w
-JOIN projects p ON w.project_id = p.id
-WHERE p.organization_id = $1;
+SELECT COALESCE(SUM(d.amount), 0) as total_donations FROM donations d
+JOIN projects p ON d.project_id = p.id
+WHERE p.organization_id = $1 AND d.payment_status = 'Completed';
 
 

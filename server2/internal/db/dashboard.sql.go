@@ -15,14 +15,15 @@ import (
 
 const GetDashboardReportByDateRange = `-- name: GetDashboardReportByDateRange :one
 SELECT 
-    COUNT(w.id) as total_waqfs,
-    COALESCE(SUM(w.total_amount), 0) as total_amount,
-    COUNT(DISTINCT w.project_id) as total_projects
-FROM waqfs w
-JOIN projects p ON w.project_id = p.id
+    COUNT(d.id) as total_waqfs,
+    COALESCE(SUM(d.amount), 0) as total_amount,
+    COUNT(DISTINCT d.project_id) as total_projects
+FROM donations d
+JOIN projects p ON d.project_id = p.id
 WHERE p.is_active = true 
-AND w.created_date >= $1 
-AND w.created_date <= $2
+AND d.payment_status = 'Completed'
+AND d.created_date >= $1 
+AND d.created_date <= $2
 `
 
 type GetDashboardReportByDateRangeParams struct {
@@ -43,17 +44,56 @@ func (q *Queries) GetDashboardReportByDateRange(ctx context.Context, arg *GetDas
 	return &i, err
 }
 
+const GetDonationTypesReport = `-- name: GetDonationTypesReport :many
+SELECT 
+    d.donation_type,
+    COUNT(d.id) as total_donations,
+    COALESCE(SUM(d.amount), 0) as total_amount
+FROM donations d
+JOIN projects p ON d.project_id = p.id
+WHERE d.payment_status = 'Completed' AND p.is_active = true
+GROUP BY d.donation_type
+ORDER BY total_amount DESC
+`
+
+type GetDonationTypesReportRow struct {
+	DonationType   *string     `json:"donation_type"`
+	TotalDonations int64       `json:"total_donations"`
+	TotalAmount    interface{} `json:"total_amount"`
+}
+
+func (q *Queries) GetDonationTypesReport(ctx context.Context) ([]*GetDonationTypesReportRow, error) {
+	rows, err := q.db.Query(ctx, GetDonationTypesReport)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*GetDonationTypesReportRow{}
+	for rows.Next() {
+		var i GetDonationTypesReportRow
+		if err := rows.Scan(&i.DonationType, &i.TotalDonations, &i.TotalAmount); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const GetMonthlyDonationTrend = `-- name: GetMonthlyDonationTrend :many
 SELECT 
-    DATE_TRUNC('month', w.created_date) as month,
-    COUNT(w.id) as total_waqfs,
-    COALESCE(SUM(w.total_amount), 0) as total_amount
-FROM waqfs w
-JOIN projects p ON w.project_id = p.id
+    DATE_TRUNC('month', d.created_date) as month,
+    COUNT(d.id) as total_waqfs,
+    COALESCE(SUM(d.amount), 0) as total_amount
+FROM donations d
+JOIN projects p ON d.project_id = p.id
 WHERE p.is_active = true 
-AND w.created_date >= $1 
-AND w.created_date <= $2
-GROUP BY DATE_TRUNC('month', w.created_date)
+AND d.payment_status = 'Completed'
+AND d.created_date >= $1 
+AND d.created_date <= $2
+GROUP BY DATE_TRUNC('month', d.created_date)
 ORDER BY month
 `
 
@@ -91,11 +131,11 @@ func (q *Queries) GetMonthlyDonationTrend(ctx context.Context, arg *GetMonthlyDo
 const GetOrganizationDashboardReport = `-- name: GetOrganizationDashboardReport :one
 SELECT 
     COUNT(DISTINCT p.id) as total_projects,
-    COUNT(w.id) as total_waqfs,
-    COALESCE(SUM(w.total_amount), 0) as total_donations
+    COUNT(d.id) as total_waqfs,
+    COALESCE(SUM(d.amount), 0) as total_donations
 FROM organizations o
 LEFT JOIN projects p ON o.id = p.organization_id AND p.is_active = true
-LEFT JOIN waqfs w ON p.id = w.project_id
+LEFT JOIN donations d ON p.id = d.project_id AND d.payment_status = 'Completed'
 WHERE o.id = $1 AND o.is_active = true
 `
 
@@ -114,12 +154,12 @@ func (q *Queries) GetOrganizationDashboardReport(ctx context.Context, id uuid.UU
 
 const GetTotalDonationsReport = `-- name: GetTotalDonationsReport :one
 SELECT 
-    COUNT(w.id) as total_waqfs,
-    COALESCE(SUM(w.total_amount), 0) as total_amount,
-    COUNT(DISTINCT w.project_id) as total_projects
-FROM waqfs w
-JOIN projects p ON w.project_id = p.id
-WHERE p.is_active = true
+    COUNT(d.id) as total_waqfs,
+    COALESCE(SUM(d.amount), 0) as total_amount,
+    COUNT(DISTINCT d.project_id) as total_projects
+FROM donations d
+JOIN projects p ON d.project_id = p.id
+WHERE p.is_active = true AND d.payment_status = 'Completed'
 `
 
 type GetTotalDonationsReportRow struct {
@@ -133,49 +173,4 @@ func (q *Queries) GetTotalDonationsReport(ctx context.Context) (*GetTotalDonatio
 	var i GetTotalDonationsReportRow
 	err := row.Scan(&i.TotalWaqfs, &i.TotalAmount, &i.TotalProjects)
 	return &i, err
-}
-
-const GetWaqfTypeDonatedReport = `-- name: GetWaqfTypeDonatedReport :many
-SELECT 
-    wt.id,
-    wt.name,
-    COUNT(w.id) as total_waqfs,
-    COALESCE(SUM(w.total_amount), 0) as total_amount
-FROM waqf_types wt
-LEFT JOIN waqfs w ON wt.id = w.waqf_type_id
-WHERE wt.is_active = true
-GROUP BY wt.id, wt.name
-ORDER BY total_amount DESC
-`
-
-type GetWaqfTypeDonatedReportRow struct {
-	ID          uuid.UUID   `json:"id"`
-	Name        string      `json:"name"`
-	TotalWaqfs  int64       `json:"total_waqfs"`
-	TotalAmount interface{} `json:"total_amount"`
-}
-
-func (q *Queries) GetWaqfTypeDonatedReport(ctx context.Context) ([]*GetWaqfTypeDonatedReportRow, error) {
-	rows, err := q.db.Query(ctx, GetWaqfTypeDonatedReport)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []*GetWaqfTypeDonatedReportRow{}
-	for rows.Next() {
-		var i GetWaqfTypeDonatedReportRow
-		if err := rows.Scan(
-			&i.ID,
-			&i.Name,
-			&i.TotalWaqfs,
-			&i.TotalAmount,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, &i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
 }

@@ -159,3 +159,37 @@ type MonthlyDonationTrendResponse struct {
 	TotalWaqfs  int64           `json:"total_waqfs"`
 	TotalAmount decimal.Decimal `json:"total_amount"`
 }
+
+// Donation responses
+type DonationResponse struct {
+	ID                   uuid.UUID       `json:"id"`
+	ProjectID            uuid.UUID       `json:"project_id"`
+	DonorName            string          `json:"donor_name"`
+	DonorEmail           *string         `json:"donor_email"`
+	DonorPhone           *string         `json:"donor_phone"`
+	Amount               decimal.Decimal `json:"amount"`
+	DonationType         *string         `json:"donation_type"`
+	Message              *string         `json:"message"`
+	RecipientName        *string         `json:"recipient_name"`
+	RecipientEmail       *string         `json:"recipient_email"`
+	RecipientPhone       *string         `json:"recipient_phone"`
+	IsAnonymous          *bool           `json:"is_anonymous"`
+	PaymentStatus        string          `json:"payment_status"`
+	PaymentReference     *string         `json:"payment_reference"`
+	PaymentTransactionID *string         `json:"payment_transaction_id"`
+	CreatedDate          time.Time       `json:"created_date"`
+	ModifiedDate         time.Time       `json:"modified_date"`
+}
+
+type DonationStatsResponse struct {
+	TotalDonations int64           `json:"total_donations"`
+	UniqueDonors   int64           `json:"unique_donors"`
+	TotalAmount    decimal.Decimal `json:"total_amount"`
+	AverageAmount  decimal.Decimal `json:"average_amount"`
+}
+
+type DonationTypesReportResponse struct {
+	DonationType   string          `json:"donation_type"`
+	TotalDonations int64           `json:"total_donations"`
+	TotalAmount    decimal.Decimal `json:"total_amount"`
+}

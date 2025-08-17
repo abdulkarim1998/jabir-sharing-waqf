@@ -44,8 +44,7 @@ func main() {
 	// Initialize handlers
 	organizationHandler := handlers.NewOrganizationHandler(queries, validator)
 	projectHandler := handlers.NewProjectHandler(queries, validator)
-	waqfTypeHandler := handlers.NewWaqfTypeHandler(queries, validator)
-	paymentHandler := handlers.NewPaymentHandler(queries, validator)
+	donationHandler := handlers.NewDonationHandler(queries, validator)
 	dashboardHandler := handlers.NewDashboardHandler(queries)
 
 	// Initialize Fiber app
@@ -73,7 +72,7 @@ func main() {
 	}))
 
 	// Routes
-	setupRoutes(app, organizationHandler, projectHandler, waqfTypeHandler, paymentHandler, dashboardHandler)
+	setupRoutes(app, organizationHandler, projectHandler, donationHandler, dashboardHandler)
 
 	// Start server
 	go func() {
@@ -124,8 +123,7 @@ func setupRoutes(
 	app *fiber.App,
 	organizationHandler *handlers.OrganizationHandler,
 	projectHandler *handlers.ProjectHandler,
-	waqfTypeHandler *handlers.WaqfTypeHandler,
-	paymentHandler *handlers.PaymentHandler,
+	donationHandler *handlers.DonationHandler,
 	dashboardHandler *handlers.DashboardHandler,
 ) {
 	// API v1 routes
@@ -163,25 +161,17 @@ func setupRoutes(
 	projects.Put("/:id", projectHandler.UpdateProject)
 	projects.Delete("/:id", projectHandler.DeleteProject)
 
-	// Waqf Type routes
-	waqfTypes := api.Group("/waqf-types")
-	waqfTypes.Get("/", waqfTypeHandler.GetWaqfTypes)
-	waqfTypes.Get("/:id", waqfTypeHandler.GetWaqfType)
-	waqfTypes.Post("/", waqfTypeHandler.CreateWaqfType)
-	waqfTypes.Put("/:id", waqfTypeHandler.UpdateWaqfType)
-	waqfTypes.Delete("/:id", waqfTypeHandler.DeleteWaqfType)
-
-	// Payment routes
-	payments := api.Group("/payments")
-	payments.Get("/", paymentHandler.GetPaymentTracks)
-	payments.Get("/track/:trackId", paymentHandler.GetPaymentResponse)
-	payments.Get("/waqf/:waqfId", paymentHandler.GetPaymentsByWaqf)
-	payments.Post("/update-status", paymentHandler.UpdatePaymentStatus)
+	// Donation routes
+	donations := api.Group("/donations")
+	donations.Get("/project/:projectId", donationHandler.GetDonationsByProject)
+	donations.Get("/organization/:organizationId", donationHandler.GetDonationsByOrganization)
+	donations.Get("/project/:projectId/stats", donationHandler.GetProjectDonationStats)
+	donations.Get("/organization/:organizationId/stats", donationHandler.GetOrganizationDonationStats)
 
 	// Dashboard routes
 	dashboard := api.Group("/dashboard")
 	dashboard.Get("/", dashboardHandler.GetDashboardReport)
-	dashboard.Get("/waqf-types", dashboardHandler.GetWaqfTypeDonatedReport)
+	dashboard.Get("/donation-types", dashboardHandler.GetDonationTypesReport)
 	dashboard.Get("/organization/:organizationId", dashboardHandler.GetOrganizationDashboard)
 	dashboard.Get("/date-range", dashboardHandler.GetDashboardByDateRange)
 	dashboard.Get("/monthly-trend", dashboardHandler.GetMonthlyDonationTrend)

@@ -80,15 +80,24 @@ func AllPaymentStatusValues() []PaymentStatus {
 	}
 }
 
-type GiftDetail struct {
-	ID             uuid.UUID   `json:"id"`
-	WaqfID         pgtype.UUID `json:"waqf_id"`
-	RecipientName  *string     `json:"recipient_name"`
-	RecipientEmail *string     `json:"recipient_email"`
-	Message        *string     `json:"message"`
-	IsAnonymous    *bool       `json:"is_anonymous"`
-	CreatedDate    time.Time   `json:"created_date"`
-	ModifiedDate   time.Time   `json:"modified_date"`
+type Donation struct {
+	ID                   uuid.UUID         `json:"id"`
+	ProjectID            pgtype.UUID       `json:"project_id"`
+	DonorName            string            `json:"donor_name"`
+	DonorEmail           *string           `json:"donor_email"`
+	DonorPhone           *string           `json:"donor_phone"`
+	Amount               pgtype.Numeric    `json:"amount"`
+	DonationType         *string           `json:"donation_type"`
+	Message              *string           `json:"message"`
+	RecipientName        *string           `json:"recipient_name"`
+	RecipientEmail       *string           `json:"recipient_email"`
+	RecipientPhone       *string           `json:"recipient_phone"`
+	IsAnonymous          *bool             `json:"is_anonymous"`
+	PaymentStatus        NullPaymentStatus `json:"payment_status"`
+	PaymentReference     *string           `json:"payment_reference"`
+	PaymentTransactionID *string           `json:"payment_transaction_id"`
+	CreatedDate          time.Time         `json:"created_date"`
+	ModifiedDate         time.Time         `json:"modified_date"`
 }
 
 type Organization struct {
@@ -118,21 +127,6 @@ type PaymentConfiguration struct {
 	ModifiedDate   time.Time   `json:"modified_date"`
 }
 
-type PaymentTrack struct {
-	ID           uuid.UUID      `json:"id"`
-	WaqfID       pgtype.UUID    `json:"waqf_id"`
-	Ref          string         `json:"ref"`
-	TrackID      string         `json:"track_id"`
-	TranID       *string        `json:"tran_id"`
-	Amount       pgtype.Numeric `json:"amount"`
-	Result       *string        `json:"result"`
-	ErrorText    *string        `json:"error_text"`
-	OrderID      *int32         `json:"order_id"`
-	StatusID     PaymentStatus  `json:"status_id"`
-	CreatedDate  time.Time      `json:"created_date"`
-	ModifiedDate time.Time      `json:"modified_date"`
-}
-
 type Project struct {
 	ID             uuid.UUID      `json:"id"`
 	Title          string         `json:"title"`
@@ -144,24 +138,4 @@ type Project struct {
 	OrganizationID pgtype.UUID    `json:"organization_id"`
 	CreatedDate    time.Time      `json:"created_date"`
 	ModifiedDate   time.Time      `json:"modified_date"`
-}
-
-type Waqf struct {
-	ID            uuid.UUID      `json:"id"`
-	WaqfTypeID    pgtype.UUID    `json:"waqf_type_id"`
-	ProjectID     pgtype.UUID    `json:"project_id"`
-	NumberOfSaham int32          `json:"number_of_saham"`
-	TotalAmount   pgtype.Numeric `json:"total_amount"`
-	CreatedDate   time.Time      `json:"created_date"`
-	ModifiedDate  time.Time      `json:"modified_date"`
-}
-
-type WaqfType struct {
-	ID           uuid.UUID      `json:"id"`
-	Name         string         `json:"name"`
-	Description  *string        `json:"description"`
-	FixedAmount  pgtype.Numeric `json:"fixed_amount"`
-	IsActive     *bool          `json:"is_active"`
-	CreatedDate  time.Time      `json:"created_date"`
-	ModifiedDate time.Time      `json:"modified_date"`
 }

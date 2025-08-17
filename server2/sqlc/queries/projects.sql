@@ -38,10 +38,10 @@ SELECT
     p.id,
     p.title,
     p.value as target_amount,
-    COALESCE(SUM(w.total_amount), 0) as collected_amount,
-    COUNT(w.id) as total_waqfs
+    COALESCE(SUM(d.amount), 0) as collected_amount,
+    COUNT(d.id) as total_donations
 FROM projects p
-LEFT JOIN waqfs w ON p.id = w.project_id
+LEFT JOIN donations d ON p.id = d.project_id AND d.payment_status = 'Completed'
 WHERE p.id = $1 AND p.is_active = true
 GROUP BY p.id, p.title, p.value;
 
