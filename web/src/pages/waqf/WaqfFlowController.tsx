@@ -6,13 +6,15 @@ import {
   Box,
   Center,
   Text,
+  Loader,
 } from '@mantine/core'
 import WaqfOptions from './WaqfOptions'
 import { formBgImage, formImage, hands } from '@/assets'
 import { IconArrowNarrowLeft } from '@tabler/icons-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useStyles } from './WaqfFlowController.styles'
 import { WaqfType } from '@/interfaces'
+import useWaqfData from '@/hooks/useWaqfData'
 
 const WaqfFlowController = ({
   waqfType,
@@ -21,6 +23,64 @@ const WaqfFlowController = ({
 }): JSX.Element => {
   const { classes } = useStyles()
   const navigate = useNavigate()
+  const { projectId } = useParams()
+  
+  // Fetch project and organization data concurrently
+  const { project, organization, isLoading, error } = useWaqfData(projectId)
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <Box className={classes.bgImageWrapper}>
+        <BackgroundImage
+          src={formBgImage}
+          rel="preload"
+          className={classes.hiddenMobile}
+        >
+          <Box className={classes.gradientOverlay} />
+          <Box className={classes.contentWrapper}>
+            <Container className={classes.gridContainer}>
+              <Center style={{ height: '50vh' }}>
+                <Loader size="lg" />
+              </Center>
+            </Container>
+          </Box>
+        </BackgroundImage>
+        <div className={classes.hiddenDesktop}>
+          <Center style={{ height: '50vh' }}>
+            <Loader size="lg" />
+          </Center>
+        </div>
+      </Box>
+    )
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <Box className={classes.bgImageWrapper}>
+        <BackgroundImage
+          src={formBgImage}
+          rel="preload"
+          className={classes.hiddenMobile}
+        >
+          <Box className={classes.gradientOverlay} />
+          <Box className={classes.contentWrapper}>
+            <Container className={classes.gridContainer}>
+              <Center style={{ height: '50vh' }}>
+                <Text color="red">خطأ في تحميل البيانات</Text>
+              </Center>
+            </Container>
+          </Box>
+        </BackgroundImage>
+        <div className={classes.hiddenDesktop}>
+          <Center style={{ height: '50vh' }}>
+            <Text color="red">خطأ في تحميل البيانات</Text>
+          </Center>
+        </div>
+      </Box>
+    )
+  }
 
   return (
     <Box className={classes.bgImageWrapper}>
@@ -45,7 +105,7 @@ const WaqfFlowController = ({
         <Box className={classes.contentWrapper}>
           <Container className={classes.gridContainer}>
             <Grid gutter="lg" className={classes.justifyCenter}>
-              <WaqfOptions waqfType={waqfType} />
+              <WaqfOptions waqfType={waqfType} project={project} organization={organization} />
             </Grid>
           </Container>
         </Box>
@@ -82,7 +142,7 @@ const WaqfFlowController = ({
         <Box className={classes.contentWrapper}>
           <Container className={classes.optionsContainer}>
             <Grid gutter="lg" className={classes.justifyCenter}>
-              <WaqfOptions waqfType={waqfType} />
+              <WaqfOptions waqfType={waqfType} project={project} organization={organization} />
             </Grid>
           </Container>
         </Box>

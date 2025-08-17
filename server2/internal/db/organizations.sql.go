@@ -9,6 +9,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const CreateOrganization = `-- name: CreateOrganization :one
@@ -98,6 +99,56 @@ func (q *Queries) GetOrganizationByID(ctx context.Context, id uuid.UUID) (*Organ
 		&i.ModifiedDate,
 	)
 	return &i, err
+}
+
+const GetOrganizationDonorsCount = `-- name: GetOrganizationDonorsCount :one
+SELECT COUNT(DISTINCT donor_name) as count FROM waqfs w
+JOIN projects p ON w.project_id = p.id
+WHERE p.organization_id = $1
+`
+
+func (q *Queries) GetOrganizationDonorsCount(ctx context.Context, organizationID pgtype.UUID) (int64, error) {
+	row := q.db.QueryRow(ctx, GetOrganizationDonorsCount, organizationID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const GetOrganizationProjectCount = `-- name: GetOrganizationProjectCount :one
+SELECT COUNT(*) as count FROM projects 
+WHERE organization_id = $1 AND is_active = true
+`
+
+func (q *Queries) GetOrganizationProjectCount(ctx context.Context, organizationID pgtype.UUID) (int64, error) {
+	row := q.db.QueryRow(ctx, GetOrganizationProjectCount, organizationID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const GetOrganizationProjectsTotalValue = `-- name: GetOrganizationProjectsTotalValue :one
+SELECT COALESCE(SUM(value), 0) as total_value FROM projects 
+WHERE organization_id = $1 AND is_active = true
+`
+
+func (q *Queries) GetOrganizationProjectsTotalValue(ctx context.Context, organizationID pgtype.UUID) (interface{}, error) {
+	row := q.db.QueryRow(ctx, GetOrganizationProjectsTotalValue, organizationID)
+	var total_value interface{}
+	err := row.Scan(&total_value)
+	return total_value, err
+}
+
+const GetOrganizationTotalDonations = `-- name: GetOrganizationTotalDonations :one
+SELECT COALESCE(SUM(w.total_amount), 0) as total_donations FROM waqfs w
+JOIN projects p ON w.project_id = p.id
+WHERE p.organization_id = $1
+`
+
+func (q *Queries) GetOrganizationTotalDonations(ctx context.Context, organizationID pgtype.UUID) (interface{}, error) {
+	row := q.db.QueryRow(ctx, GetOrganizationTotalDonations, organizationID)
+	var total_donations interface{}
+	err := row.Scan(&total_donations)
+	return total_donations, err
 }
 
 const ListOrganizations = `-- name: ListOrganizations :many

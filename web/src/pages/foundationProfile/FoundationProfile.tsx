@@ -19,16 +19,22 @@ const FoundationProfile = ({
   const { data: organization } = useOrganizationCard<OrganizationCardData>(
     `organizations/${id}`
   )
-  const { data: donors } = useOrganizationCard<number>(
-    `organizations/donors/${id}/count`
-  )
+  // TODO: These endpoints don't exist in the backend yet
+  // const { data: donors } = useOrganizationCard<number>(
+  //   `organizations/donors/${id}/count`
+  // )
   const { data: projects } = useProjectCard(id)
-  const { data: numOfProjects } = useOrganizationCard<number>(
-    `organizations/projects/${id}/count`
-  )
-  const { data: totalValue } = useOrganizationCard<number>(
-    `organizations/projects/${id}/totalValue`
-  )
+  // const { data: numOfProjects } = useOrganizationCard<number>(
+  //   `organizations/projects/${id}/count`
+  // )
+  // const { data: totalValue } = useOrganizationCard<number>(
+  //   `organizations/projects/${id}/totalValue`
+  // )
+  
+  // Temporary mock data until backend endpoints are implemented
+  const donors = 0
+  const numOfProjects = projects?.length || 0
+  const totalValue = projects?.reduce((sum, project) => sum + (project.value || 0), 0) || 0
 
   if (!organization) {
     return <Loader />

@@ -147,6 +147,12 @@ func setupRoutes(
 	orgs.Put("/:id", organizationHandler.UpdateOrganization)
 	orgs.Delete("/:id", organizationHandler.DeleteOrganization)
 
+	// Organization statistics routes
+	orgs.Get("/projects/:id/count", organizationHandler.GetOrganizationProjectCount)
+	orgs.Get("/projects/:id/totalvalue", organizationHandler.GetOrganizationProjectsTotalValue)
+	orgs.Get("/donors/:id/count", organizationHandler.GetOrganizationDonorsCount)
+	orgs.Get("/donations/:id/total", organizationHandler.GetOrganizationTotalDonations)
+
 	// Project routes
 	projects := api.Group("/projects")
 	projects.Get("/", projectHandler.GetProjects)

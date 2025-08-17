@@ -6,7 +6,7 @@ import useSWR from 'swr'
 const useFinancialStatus = (projectId?: string) => {
   const { axiosServer: axios } = useUser()
   const { data, isLoading, error } = useSWR(
-    `organizations/projects/${projectId}/financialStatus`,
+    projectId ? `projects/${projectId}/financial-status` : null,
     (url: string) => fetcher<FinancialStatus>(axios, url)
   )
 

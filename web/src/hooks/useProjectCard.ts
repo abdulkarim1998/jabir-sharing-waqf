@@ -1,12 +1,10 @@
-import useUser from '@/context/user'
 import { ProjectCardData } from '@/interfaces'
-import { fetcher } from '@/lib'
+import { fetcher, axios } from '@/lib'
 import useSWR from 'swr'
 
 const useProjectCard = (orgId?: string) => {
-  const { axiosServer: axios } = useUser()
   const { data, mutate, isLoading, isValidating, error } = useSWR(
-    orgId ? `organizations/projects/${orgId}` : `organizations/projects`,
+    orgId ? `projects/organization/${orgId}` : `projects`,
     (url: string) => fetcher<ProjectCardData[]>(axios, url)
   )
 

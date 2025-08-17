@@ -7,7 +7,7 @@ import useSWR from 'swr'
 const useProjects = (orgId?: string) => {
   const { axiosServer: axios } = useUser()
   const { data, mutate, isLoading, isValidating, error } = useSWR(
-    orgId && `organizations/projects/${orgId}`,
+    orgId ? `projects/organization/${orgId}` : null,
     (url) => fetcher<Project[]>(axios, url)
   )
   const [isSaving, setIsSaving] = useState(false)
@@ -15,9 +15,7 @@ const useProjects = (orgId?: string) => {
   const deleteProject = async (projectId: string) => {
     try {
       setIsSaving(true)
-      await axios.delete(
-        `/organizations/projects/${projectId}?organizationId=${orgId}`
-      )
+      await axios.delete(`/projects/${projectId}`)
       await mutate()
     } catch (error) {
       console.log(error)
@@ -30,10 +28,7 @@ const useProjects = (orgId?: string) => {
     const { ...projNoId } = project
     try {
       setIsSaving(true)
-      await axios.put(
-        `/organizations/projects/${projectID}?organizationId=${orgId}`,
-        projNoId
-      )
+      await axios.put(`/projects/${projectID}`, projNoId)
       await mutate()
     } catch (error) {
       console.log(error)
@@ -46,7 +41,9 @@ const useProjects = (orgId?: string) => {
     try {
       setIsSaving(true)
       const { ...projNoId } = project
-      await axios.post(`/organizations/projects/${orgId}`, projNoId)
+      // Include organizationId in the project data for creation
+      const projectWithOrgId = { ...projNoId, organizationId: orgId }
+      await axios.post(`/projects`, projectWithOrgId)
       await mutate()
     } catch (error) {
       console.log(error)

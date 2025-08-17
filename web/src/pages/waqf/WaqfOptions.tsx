@@ -6,14 +6,23 @@ import WaqfCard from '@/components/cards/WaqfCard'
 import { useStyles } from './WaqfOptions.styles'
 import PersonalSahmForm from '../sahm/personal/PersonalSahmForm'
 import GiftSahmForm from '../sahm/gift/GiftSahmForm'
-import { WaqfType } from '@/interfaces'
+import { WaqfType, Project, Organization } from '@/interfaces'
 import { useNavigate, useParams } from 'react-router-dom'
 import { DonationProvider } from '@/components/form/context'
+import { WaqfDataProvider } from '@/components/form/WaqfDataContext'
 
 const isPersonal = (waqfType: WaqfType) =>
   waqfType === WaqfType.personal || waqfType === WaqfType.ramadan
 
-const WaqfOptions = ({ waqfType }: { waqfType?: WaqfType }): JSX.Element => {
+const WaqfOptions = ({ 
+  waqfType,
+  project,
+  organization 
+}: { 
+  waqfType?: WaqfType
+  project?: Project | null
+  organization?: Organization | null
+}): JSX.Element => {
   const { classes } = useStyles()
   const { projectId: id } = useParams()
   const [selectedWaqfType, setSelectedWaqfType] = useState<WaqfType | null>(
@@ -33,9 +42,11 @@ const WaqfOptions = ({ waqfType }: { waqfType?: WaqfType }): JSX.Element => {
         <div className={classes.div}>
           <Box className={classes.backgroundColorBox}>
             {waqfType ? (
-              <DonationProvider waqfType={waqfType}>
-                {isPersonal(waqfType) ? <PersonalSahmForm /> : <GiftSahmForm />}
-              </DonationProvider>
+              <WaqfDataProvider project={project} organization={organization}>
+                <DonationProvider waqfType={waqfType}>
+                  {isPersonal(waqfType) ? <PersonalSahmForm /> : <GiftSahmForm />}
+                </DonationProvider>
+              </WaqfDataProvider>
             ) : (
               <>
                 <Center className={classes.labelContainer}>
@@ -94,9 +105,11 @@ const WaqfOptions = ({ waqfType }: { waqfType?: WaqfType }): JSX.Element => {
       <div className={classes.hiddenDesktop}>
         <Box className={classes.box}>
           {waqfType ? (
-            <DonationProvider waqfType={waqfType}>
-              {isPersonal(waqfType) ? <PersonalSahmForm /> : <GiftSahmForm />}
-            </DonationProvider>
+            <WaqfDataProvider project={project} organization={organization}>
+              <DonationProvider waqfType={waqfType}>
+                {isPersonal(waqfType) ? <PersonalSahmForm /> : <GiftSahmForm />}
+              </DonationProvider>
+            </WaqfDataProvider>
           ) : (
             <>
               <Center className={classes.labelContainer}>

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -26,6 +27,9 @@ func NewOrganizationHandler(queries *db.Queries, validator *validator.Validator)
 func (h *OrganizationHandler) GetOrganizations(c *fiber.Ctx) error {
 	organizations, err := h.queries.ListOrganizations(context.Background())
 	if err != nil {
+
+		fmt.Println(err)
+
 		return c.Status(fiber.StatusInternalServerError).JSON(models.APIResponse{
 			Success: false,
 			Error:   "Failed to fetch organizations",
@@ -261,5 +265,97 @@ func (h *OrganizationHandler) DeleteOrganization(c *fiber.Ctx) error {
 	return c.JSON(models.APIResponse{
 		Success: true,
 		Message: "Organization deleted successfully",
+	})
+}
+
+func (h *OrganizationHandler) GetOrganizationProjectCount(c *fiber.Ctx) error {
+	id, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(models.APIResponse{
+			Success: false,
+			Error:   "Invalid organization ID",
+		})
+	}
+
+	count, err := h.queries.GetOrganizationProjectCount(context.Background(), uuidToPgUUID(id))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(models.APIResponse{
+			Success: false,
+			Error:   "Failed to fetch project count",
+		})
+	}
+
+	return c.JSON(models.APIResponse{
+		Success: true,
+		Data:    count,
+	})
+}
+
+func (h *OrganizationHandler) GetOrganizationProjectsTotalValue(c *fiber.Ctx) error {
+	id, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(models.APIResponse{
+			Success: false,
+			Error:   "Invalid organization ID",
+		})
+	}
+
+	totalValue, err := h.queries.GetOrganizationProjectsTotalValue(context.Background(), uuidToPgUUID(id))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(models.APIResponse{
+			Success: false,
+			Error:   "Failed to fetch projects total value",
+		})
+	}
+
+	return c.JSON(models.APIResponse{
+		Success: true,
+		Data:    totalValue,
+	})
+}
+
+func (h *OrganizationHandler) GetOrganizationDonorsCount(c *fiber.Ctx) error {
+	id, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(models.APIResponse{
+			Success: false,
+			Error:   "Invalid organization ID",
+		})
+	}
+
+	count, err := h.queries.GetOrganizationDonorsCount(context.Background(), uuidToPgUUID(id))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(models.APIResponse{
+			Success: false,
+			Error:   "Failed to fetch donors count",
+		})
+	}
+
+	return c.JSON(models.APIResponse{
+		Success: true,
+		Data:    count,
+	})
+}
+
+func (h *OrganizationHandler) GetOrganizationTotalDonations(c *fiber.Ctx) error {
+	id, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(models.APIResponse{
+			Success: false,
+			Error:   "Invalid organization ID",
+		})
+	}
+
+	totalDonations, err := h.queries.GetOrganizationTotalDonations(context.Background(), uuidToPgUUID(id))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(models.APIResponse{
+			Success: false,
+			Error:   "Failed to fetch total donations",
+		})
+	}
+
+	return c.JSON(models.APIResponse{
+		Success: true,
+		Data:    totalDonations,
 	})
 }

@@ -8,15 +8,16 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 3000,
-    // origin: 'http://localhost/waqf',
     hmr: {
-      host: 'localhost',
-      path: '/waqf',
-      clientPort: 80,
       port: 3000,
     },
     proxy: {
-      '/api': 'http://api:80',
+      '/api': {
+        target: process.env.NODE_ENV === 'development' && process.env.DOCKER === 'true' 
+          ? 'http://server:8081' 
+          : 'http://localhost:8081',
+        changeOrigin: true,
+      },
       '/auth': {
         target: 'https://keycloak-02.rihal.tech',
         changeOrigin: true,

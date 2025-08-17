@@ -1,11 +1,9 @@
-import useUser from '@/context/user'
 import { Organization } from '@/interfaces'
-import { fetcher } from '@/lib'
+import { fetcher, axios } from '@/lib'
 import { useState } from 'react'
 import useSWR from 'swr'
 
 const useOrganizations = () => {
-  const { axiosServer: axios } = useUser()
   const { data, mutate, isLoading, isValidating, error } = useSWR(
     `organizations`,
     (url) => fetcher<Organization[]>(axios, url)

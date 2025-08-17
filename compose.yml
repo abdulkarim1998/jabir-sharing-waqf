@@ -1,0 +1,67 @@
+services:
+
+  web:
+    image: node:20
+    entrypoint: /app/entrypoint.sh
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+      - DOCKER=true
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8081/api/v1
+      - INTERNAL_API_BASE_URL=http://server:8081/api/v1
+      - NEXT_PUBLIC_STRAPI_BASE_URL=http://localhost:3000/strapi
+      - INTERNAL_STRAPI_BASE_URL=http://strapi:1337
+      - NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LfrKmYrAAAAAPHCpg-5VgcTO4Ziijvu_QxSP7u2
+    depends_on:
+      - server
+    volumes:
+      - ./web:/app
+    ports:
+      - 3000:3000
+    networks:
+      - jabir-waqf
+
+  server:
+    image: cosmtrek/air:v1.61.7
+    working_dir: /app
+    environment:
+      - MODE=dev
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=123456
+      - DB_NAME=postgres
+      - DB_SSLMODE=disable
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 8081:8081
+    volumes:
+      - ./server2:/app:rw,cached
+    networks:
+      - jabir-waqf
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    networks:
+      - jabir-waqf
+
+volumes:
+  postgres_data:
+
+networks:
+  jabir-waqf:

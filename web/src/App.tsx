@@ -10,7 +10,7 @@ import {
   WaqfFlowController,
 } from './pages'
 import './styles/fonts.scss'
-import { UserProvider } from './context/user'
+// import { UserProvider } from './context/user'
 import PrivateRoute from './routing/PrivateRoute'
 import rtlPlugin from 'stylis-plugin-rtl'
 import { UserRole, WaqfType } from './interfaces'

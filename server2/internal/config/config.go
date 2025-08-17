@@ -37,15 +37,15 @@ type AuthConfig struct {
 func Load() *Config {
 	return &Config{
 		Database: DatabaseConfig{
-			Host:     getEnv("DB_HOST", "jupiter.rihal.dev"),
-			Port:     getEnvAsInt("DB_PORT", 5454),
+			Host:     getEnv("DB_HOST", "db"),
+			Port:     getEnvAsInt("DB_PORT", 5432),
 			User:     getEnv("DB_USER", "postgres"),
-			Password: getEnv("DB_PASSWORD", "f974hf348gf3478f437fh3f43"),
+			Password: getEnv("DB_PASSWORD", "123456"),
 			DBName:   getEnv("DB_NAME", "postgres"),
 			SSLMode:  getEnv("DB_SSLMODE", "disable"),
 		},
 		Server: ServerConfig{
-			Port: getEnv("PORT", "8080"),
+			Port: getEnv("PORT", "8081"),
 			Env:  getEnv("APP_ENV", "development"),
 		},
 		Auth: AuthConfig{

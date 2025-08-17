@@ -33,4 +33,22 @@ UPDATE organizations SET
     modified_date = NOW()
 WHERE id = $1;
 
+-- name: GetOrganizationProjectCount :one
+SELECT COUNT(*) as count FROM projects 
+WHERE organization_id = $1 AND is_active = true;
+
+-- name: GetOrganizationProjectsTotalValue :one
+SELECT COALESCE(SUM(value), 0) as total_value FROM projects 
+WHERE organization_id = $1 AND is_active = true;
+
+-- name: GetOrganizationDonorsCount :one
+SELECT COUNT(DISTINCT donor_name) as count FROM waqfs w
+JOIN projects p ON w.project_id = p.id
+WHERE p.organization_id = $1;
+
+-- name: GetOrganizationTotalDonations :one
+SELECT COALESCE(SUM(w.total_amount), 0) as total_donations FROM waqfs w
+JOIN projects p ON w.project_id = p.id
+WHERE p.organization_id = $1;
+
 

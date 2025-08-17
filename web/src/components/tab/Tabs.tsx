@@ -5,34 +5,33 @@ import SearchBar from '@/components/searchBar/SearchBar'
 import { useStyles } from './Tabs.styles'
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { OrganizationCardData } from '@/interfaces'
-import useOrganizationCard from '@/hooks/useOrganizationCard'
+import { Organization } from '@/interfaces'
+import useOrganizations from '@/hooks/useOrganizations'
 import useProjectCard from '@/hooks/useProjectCard'
 
 const WaqfTabs = (): JSX.Element => {
   const { classes } = useStyles()
   const [searchParams] = useSearchParams()
   const search = useMemo(() => searchParams.get('s') || '', [searchParams])
-  const { data: organizations } =
-    useOrganizationCard<OrganizationCardData[]>(`organizations`)
+  const { data: organizations } = useOrganizations()
   const { data: projects } = useProjectCard()
 
   const filteredOrg = useMemo(
     () =>
       search
-        ? organizations.filter((org) =>
+        ? organizations?.filter((org) =>
             org.name.toLowerCase().includes(search.toLowerCase())
-          )
-        : organizations,
+          ) || []
+        : organizations || [],
     [search, organizations]
   )
   const filteredProj = useMemo(
     () =>
       search
-        ? projects.filter((project) =>
+        ? projects?.filter((project) =>
             project.title.toLowerCase().includes(search.toLowerCase())
-          )
-        : projects,
+          ) || []
+        : projects || [],
     [search, projects]
   )
 
@@ -71,7 +70,7 @@ const WaqfTabs = (): JSX.Element => {
                   project={data}
                   orgLogo={
                     organizations?.find((org) => org.id === data.organizationId)
-                      ?.logo
+                      ?.logo || ''
                   }
                   showLogoAndName
                   marginTop="0"

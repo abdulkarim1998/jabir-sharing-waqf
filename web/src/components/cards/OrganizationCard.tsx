@@ -1,4 +1,4 @@
-import { CardComponentProps } from '@/interfaces'
+import { Organization } from '@/interfaces'
 import {
   useMantineTheme,
   Text,
@@ -13,6 +13,10 @@ import { useNavigate } from 'react-router-dom'
 import { person, heart } from '@/assets'
 import { useStyles } from './OrganizationCard.styles'
 import useOrganizationCard from '@/hooks/useOrganizationCard'
+
+interface CardComponentProps {
+  data: Organization
+}
 
 const OrgCard = ({ data }: CardComponentProps): JSX.Element => {
   const theme = useMantineTheme()
@@ -35,12 +39,12 @@ const OrgCard = ({ data }: CardComponentProps): JSX.Element => {
     `organizations/donations/${data.id}/total`
   )
 
-  const percentagePaid = (donations / totalValue) * 100
+  const percentagePaid = totalValue && donations ? (donations / totalValue) * 100 : 0
 
   return (
     <Card className={classes.card} p="2rem">
       <Group mb={theme.spacing.xs} spacing={theme.spacing.xs}>
-        <img src={data.logo} className={classes.logo} />
+        <img src={data.logo || ''} className={classes.logo} />
         <Box>
           <Text color="dimmed" className={classes.name}>
             اسم المؤسسة
@@ -49,7 +53,7 @@ const OrgCard = ({ data }: CardComponentProps): JSX.Element => {
         </Box>
       </Group>
 
-      <Text className={classes.description}>{data.description}</Text>
+      <Text className={classes.description}>{data.description || ''}</Text>
 
       <Divider color="#E8E8E8" className={classes.divider} />
 
