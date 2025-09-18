@@ -5,6 +5,7 @@ import Instagram from '@/assets/icons/Instagram'
 import Twitter from '@/assets/icons/Twitter'
 import { useStyles } from './FoundationInfo.styles'
 import { Link } from 'react-router-dom'
+import { getOrganizationImageUrl } from '@/utils/imageUtils'
 
 interface Props {
   data: OrganizationCardData
@@ -25,7 +26,7 @@ const LargeScreenView = ({ data }: Props): JSX.Element => {
   return (
     <Group position="apart" className={classes.hiddenMobile}>
       <Box className={classes.imgBox}>
-        <img src={data.logo} className={classes.logo} />
+        <img src={getOrganizationImageUrl(data.image, data.logo)} className={classes.logo} alt={data.name} />
       </Box>
       <Grid style={{ flexGrow: 1 }}>
         <Grid.Col span={12}>

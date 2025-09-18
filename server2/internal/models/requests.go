@@ -40,6 +40,7 @@ type CreateOrganizationRequest struct {
 	Email       string `json:"email" validate:"required,email"`
 	Phone       string `json:"phone"`
 	Logo        string `json:"logo" validate:"omitempty,url"`
+	Image       string `json:"image"`
 }
 
 type UpdateOrganizationRequest struct {
@@ -52,6 +53,7 @@ type UpdateOrganizationRequest struct {
 	Email       string `json:"email" validate:"required,email"`
 	Phone       string `json:"phone"`
 	Logo        string `json:"logo" validate:"omitempty,url"`
+	Image       string `json:"image"`
 }
 
 type CreateOrganizationUserRequest struct {
@@ -73,6 +75,7 @@ type CreateProjectRequest struct {
 	Description    string          `json:"description" validate:"required,max=1000"`
 	Value          decimal.Decimal `json:"value" validate:"required,gt=0"`
 	Address        string          `json:"address" validate:"max=500"`
+	Image          string          `json:"image"`
 	OrganizationID uuid.UUID       `json:"organization_id" validate:"required"`
 }
 
@@ -81,6 +84,7 @@ type UpdateProjectRequest struct {
 	Description string          `json:"description" validate:"required,max=1000"`
 	Value       decimal.Decimal `json:"value" validate:"required,gt=0"`
 	Address     string          `json:"address" validate:"max=500"`
+	Image       string          `json:"image"`
 	IsComplete  bool            `json:"is_complete"`
 }
 

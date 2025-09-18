@@ -16,6 +16,7 @@ import { useState } from 'react'
 import useFinancialStatus from '@/hooks/useFinancialStatus'
 import usePayment from '@/hooks/usePayment'
 import useWaqfType from '@/hooks/useWaqfType'
+import { getProjectImageUrl } from '@/utils/imageUtils'
 
 const ProjectCard = ({
   project,
@@ -70,6 +71,19 @@ const ProjectCard = ({
               <Text className={classes.title}>{project.title}</Text>
             </Box>
           </Group>
+          {project.image && (
+            <img
+              src={getProjectImageUrl(project.image)}
+              alt={project.title}
+              style={{
+                width: '100%',
+                height: '200px',
+                objectFit: 'cover',
+                borderRadius: '8px',
+                marginTop: '1rem'
+              }}
+            />
+          )}
           <Text mt="1.2rem" className={classes.description}>
             {project.description}
           </Text>
@@ -77,6 +91,19 @@ const ProjectCard = ({
       ) : (
         <>
           <Text className={classes.title}>{project.title}</Text>
+          {project.image && (
+            <img
+              src={getProjectImageUrl(project.image)}
+              alt={project.title}
+              style={{
+                width: '100%',
+                height: '200px',
+                objectFit: 'cover',
+                borderRadius: '8px',
+                marginTop: '0.5rem'
+              }}
+            />
+          )}
           <Text mt="0.5rem" className={classes.description}>
             {project.description}
           </Text>

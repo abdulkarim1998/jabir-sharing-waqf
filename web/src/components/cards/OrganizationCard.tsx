@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import { person, heart } from '@/assets'
 import { useStyles } from './OrganizationCard.styles'
 import useOrganizationCard from '@/hooks/useOrganizationCard'
+import { getOrganizationImageUrl } from '@/utils/imageUtils'
 
 interface CardComponentProps {
   data: Organization
@@ -44,7 +45,7 @@ const OrgCard = ({ data }: CardComponentProps): JSX.Element => {
   return (
     <Card className={classes.card} p="2rem">
       <Group mb={theme.spacing.xs} spacing={theme.spacing.xs}>
-        <img src={data.logo || ''} className={classes.logo} />
+        <img src={getOrganizationImageUrl(data.image, data.logo)} className={classes.logo} alt={data.name} />
         <Box>
           <Text color="dimmed" className={classes.name}>
             اسم المؤسسة

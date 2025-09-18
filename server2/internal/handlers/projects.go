@@ -7,20 +7,24 @@ import (
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 
+	"jabir-waqf-go/internal/config"
 	"jabir-waqf-go/internal/db"
 	"jabir-waqf-go/internal/models"
+	"jabir-waqf-go/internal/utils"
 	"jabir-waqf-go/pkg/validator"
 )
 
 type ProjectHandler struct {
 	queries   *db.Queries
 	validator *validator.Validator
+	minio     *config.MinioConfig
 }
 
-func NewProjectHandler(queries *db.Queries, validator *validator.Validator) *ProjectHandler {
+func NewProjectHandler(queries *db.Queries, validator *validator.Validator, minio *config.MinioConfig) *ProjectHandler {
 	return &ProjectHandler{
 		queries:   queries,
 		validator: validator,
+		minio:     minio,
 	}
 }
 
@@ -61,6 +65,7 @@ func (h *ProjectHandler) GetProjects(c *fiber.Ctx) error {
 			IsActive:       isActive,
 			IsComplete:     isComplete,
 			Address:        project.Address,
+			Image:          utils.GetImageURL(project.Image),
 			OrganizationID: pgUUIDToUUID(project.OrganizationID),
 			CreatedDate:    project.CreatedDate,
 			ModifiedDate:   project.ModifiedDate,
@@ -116,6 +121,7 @@ func (h *ProjectHandler) GetProject(c *fiber.Ctx) error {
 		IsActive:       isActive,
 		IsComplete:     isComplete,
 		Address:        project.Address,
+		Image:          project.Image,
 		OrganizationID: pgUUIDToUUID(project.OrganizationID),
 		CreatedDate:    project.CreatedDate,
 		ModifiedDate:   project.ModifiedDate,
@@ -172,6 +178,7 @@ func (h *ProjectHandler) GetProjectsByOrganization(c *fiber.Ctx) error {
 			IsActive:       isActive,
 			IsComplete:     isComplete,
 			Address:        project.Address,
+			Image:          utils.GetImageURL(project.Image),
 			OrganizationID: pgUUIDToUUID(project.OrganizationID),
 			CreatedDate:    project.CreatedDate,
 			ModifiedDate:   project.ModifiedDate,
@@ -205,6 +212,7 @@ func (h *ProjectHandler) CreateProject(c *fiber.Ctx) error {
 		Description:    req.Description,
 		Value:          decimalToPgNumeric(req.Value),
 		Address:        &req.Address,
+		Image:          &req.Image,
 		OrganizationID: uuidToPgUUID(req.OrganizationID),
 	})
 	if err != nil {
@@ -240,6 +248,7 @@ func (h *ProjectHandler) CreateProject(c *fiber.Ctx) error {
 		IsActive:       isActiveCreate,
 		IsComplete:     isCompleteCreate,
 		Address:        project.Address,
+		Image:          project.Image,
 		OrganizationID: pgUUIDToUUID(project.OrganizationID),
 		CreatedDate:    project.CreatedDate,
 		ModifiedDate:   project.ModifiedDate,
@@ -281,6 +290,7 @@ func (h *ProjectHandler) UpdateProject(c *fiber.Ctx) error {
 		Description: req.Description,
 		Value:       decimalToPgNumeric(req.Value),
 		Address:     &req.Address,
+		Image:       &req.Image,
 		IsComplete:  &req.IsComplete,
 	})
 	if err != nil {
@@ -316,6 +326,7 @@ func (h *ProjectHandler) UpdateProject(c *fiber.Ctx) error {
 		IsActive:       isActiveUpdate,
 		IsComplete:     isCompleteUpdate,
 		Address:        project.Address,
+		Image:          project.Image,
 		OrganizationID: pgUUIDToUUID(project.OrganizationID),
 		CreatedDate:    project.CreatedDate,
 		ModifiedDate:   project.ModifiedDate,
@@ -379,7 +390,7 @@ func (h *ProjectHandler) GetProjectFinancialStatus(c *fiber.Ctx) error {
 		Title:           status.Title,
 		TargetAmount:    targetAmount,
 		CollectedAmount: interfaceToDecimal(status.CollectedAmount),
-		TotalWaqfs:      status.TotalWaqfs,
+		TotalWaqfs:      status.TotalDonations,
 	}
 
 	return c.JSON(models.APIResponse{

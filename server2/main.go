@@ -40,12 +40,14 @@ func main() {
 	// Initialize services
 	queries := db.New(dbPool)
 	validator := validator.New()
+	minioConfig := config.NewMinioConfig()
 
 	// Initialize handlers
 	organizationHandler := handlers.NewOrganizationHandler(queries, validator)
-	projectHandler := handlers.NewProjectHandler(queries, validator)
+	projectHandler := handlers.NewProjectHandler(queries, validator, minioConfig)
 	donationHandler := handlers.NewDonationHandler(queries, validator)
 	dashboardHandler := handlers.NewDashboardHandler(queries)
+	uploadHandler := handlers.NewUploadHandler(minioConfig)
 
 	// Initialize Fiber app
 	app := fiber.New(fiber.Config{
@@ -72,7 +74,7 @@ func main() {
 	}))
 
 	// Routes
-	setupRoutes(app, organizationHandler, projectHandler, donationHandler, dashboardHandler)
+	setupRoutes(app, organizationHandler, projectHandler, donationHandler, dashboardHandler, uploadHandler)
 
 	// Start server
 	go func() {
@@ -125,6 +127,7 @@ func setupRoutes(
 	projectHandler *handlers.ProjectHandler,
 	donationHandler *handlers.DonationHandler,
 	dashboardHandler *handlers.DashboardHandler,
+	uploadHandler *handlers.UploadHandler,
 ) {
 	// API v1 routes
 	api := app.Group("/api")
@@ -175,4 +178,7 @@ func setupRoutes(
 	dashboard.Get("/organization/:organizationId", dashboardHandler.GetOrganizationDashboard)
 	dashboard.Get("/date-range", dashboardHandler.GetDashboardByDateRange)
 	dashboard.Get("/monthly-trend", dashboardHandler.GetMonthlyDonationTrend)
+
+	// Image serving route
+	api.Get("/images/*", uploadHandler.ServeImage)
 }

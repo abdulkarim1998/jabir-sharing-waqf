@@ -24,6 +24,7 @@ CREATE TABLE organizations (
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(20),
     logo VARCHAR(500),
+    image VARCHAR(500),
     created_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     modified_date TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -36,6 +37,7 @@ CREATE TABLE projects (
     is_active BOOLEAN DEFAULT true,
     is_complete BOOLEAN DEFAULT false,
     address VARCHAR(500),
+    image VARCHAR(500),
     organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     created_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     modified_date TIMESTAMPTZ NOT NULL DEFAULT NOW()

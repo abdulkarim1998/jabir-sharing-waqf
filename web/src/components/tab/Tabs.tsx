@@ -5,9 +5,10 @@ import SearchBar from '@/components/searchBar/SearchBar'
 import { useStyles } from './Tabs.styles'
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Organization } from '@/interfaces'
+
 import useOrganizations from '@/hooks/useOrganizations'
 import useProjectCard from '@/hooks/useProjectCard'
+import { getOrganizationImageUrl } from '@/utils/imageUtils'
 
 const WaqfTabs = (): JSX.Element => {
   const { classes } = useStyles()
@@ -69,8 +70,10 @@ const WaqfTabs = (): JSX.Element => {
                 <ProjectCard
                   project={data}
                   orgLogo={
-                    organizations?.find((org) => org.id === data.organizationId)
-                      ?.logo || ''
+                    getOrganizationImageUrl(
+                      organizations?.find((org) => org.id === data.organizationId)?.image,
+                      organizations?.find((org) => org.id === data.organizationId)?.logo
+                    )
                   }
                   showLogoAndName
                   marginTop="0"

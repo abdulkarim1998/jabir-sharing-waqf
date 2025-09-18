@@ -15,10 +15,10 @@ import (
 const CreateOrganization = `-- name: CreateOrganization :one
 INSERT INTO organizations (
     name, location, twitter, instagram, website, description, 
-    email, phone, logo
+    email, phone, logo, image
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9
-) RETURNING id, name, location, is_active, twitter, instagram, website, description, email, phone, logo, created_date, modified_date
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+) RETURNING id, name, location, is_active, twitter, instagram, website, description, email, phone, logo, image, created_date, modified_date
 `
 
 type CreateOrganizationParams struct {
@@ -31,6 +31,7 @@ type CreateOrganizationParams struct {
 	Email       string  `json:"email"`
 	Phone       *string `json:"phone"`
 	Logo        *string `json:"logo"`
+	Image       *string `json:"image"`
 }
 
 func (q *Queries) CreateOrganization(ctx context.Context, arg *CreateOrganizationParams) (*Organization, error) {
@@ -44,6 +45,7 @@ func (q *Queries) CreateOrganization(ctx context.Context, arg *CreateOrganizatio
 		arg.Email,
 		arg.Phone,
 		arg.Logo,
+		arg.Image,
 	)
 	var i Organization
 	err := row.Scan(
@@ -58,6 +60,7 @@ func (q *Queries) CreateOrganization(ctx context.Context, arg *CreateOrganizatio
 		&i.Email,
 		&i.Phone,
 		&i.Logo,
+		&i.Image,
 		&i.CreatedDate,
 		&i.ModifiedDate,
 	)
@@ -77,7 +80,7 @@ func (q *Queries) DeleteOrganization(ctx context.Context, id uuid.UUID) error {
 }
 
 const GetOrganizationByID = `-- name: GetOrganizationByID :one
-SELECT id, name, location, is_active, twitter, instagram, website, description, email, phone, logo, created_date, modified_date FROM organizations WHERE id = $1 AND is_active = true LIMIT 1
+SELECT id, name, location, is_active, twitter, instagram, website, description, email, phone, logo, image, created_date, modified_date FROM organizations WHERE id = $1 AND is_active = true LIMIT 1
 `
 
 func (q *Queries) GetOrganizationByID(ctx context.Context, id uuid.UUID) (*Organization, error) {
@@ -95,6 +98,7 @@ func (q *Queries) GetOrganizationByID(ctx context.Context, id uuid.UUID) (*Organ
 		&i.Email,
 		&i.Phone,
 		&i.Logo,
+		&i.Image,
 		&i.CreatedDate,
 		&i.ModifiedDate,
 	)
@@ -152,7 +156,7 @@ func (q *Queries) GetOrganizationTotalDonations(ctx context.Context, organizatio
 }
 
 const ListOrganizations = `-- name: ListOrganizations :many
-SELECT id, name, location, is_active, twitter, instagram, website, description, email, phone, logo, created_date, modified_date FROM organizations WHERE is_active = true ORDER BY name
+SELECT id, name, location, is_active, twitter, instagram, website, description, email, phone, logo, image, created_date, modified_date FROM organizations WHERE is_active = true ORDER BY name
 `
 
 func (q *Queries) ListOrganizations(ctx context.Context) ([]*Organization, error) {
@@ -176,6 +180,7 @@ func (q *Queries) ListOrganizations(ctx context.Context) ([]*Organization, error
 			&i.Email,
 			&i.Phone,
 			&i.Logo,
+			&i.Image,
 			&i.CreatedDate,
 			&i.ModifiedDate,
 		); err != nil {
@@ -200,9 +205,10 @@ UPDATE organizations SET
     email = $8,
     phone = $9,
     logo = $10,
+    image = $11,
     modified_date = NOW()
 WHERE id = $1 AND is_active = true
-RETURNING id, name, location, is_active, twitter, instagram, website, description, email, phone, logo, created_date, modified_date
+RETURNING id, name, location, is_active, twitter, instagram, website, description, email, phone, logo, image, created_date, modified_date
 `
 
 type UpdateOrganizationParams struct {
@@ -216,6 +222,7 @@ type UpdateOrganizationParams struct {
 	Email       string    `json:"email"`
 	Phone       *string   `json:"phone"`
 	Logo        *string   `json:"logo"`
+	Image       *string   `json:"image"`
 }
 
 func (q *Queries) UpdateOrganization(ctx context.Context, arg *UpdateOrganizationParams) (*Organization, error) {
@@ -230,6 +237,7 @@ func (q *Queries) UpdateOrganization(ctx context.Context, arg *UpdateOrganizatio
 		arg.Email,
 		arg.Phone,
 		arg.Logo,
+		arg.Image,
 	)
 	var i Organization
 	err := row.Scan(
@@ -244,6 +252,7 @@ func (q *Queries) UpdateOrganization(ctx context.Context, arg *UpdateOrganizatio
 		&i.Email,
 		&i.Phone,
 		&i.Logo,
+		&i.Image,
 		&i.CreatedDate,
 		&i.ModifiedDate,
 	)

@@ -9,6 +9,7 @@ import (
 
 	"jabir-waqf-go/internal/db"
 	"jabir-waqf-go/internal/models"
+	"jabir-waqf-go/internal/utils"
 	"jabir-waqf-go/pkg/validator"
 )
 
@@ -44,6 +45,10 @@ func (h *OrganizationHandler) GetOrganizations(c *fiber.Ctx) error {
 			isActive = *org.IsActive
 		}
 
+		// Convert relative image paths to full URLs
+		logoURL := utils.GetImageURL(org.Logo)
+		imageURL := utils.GetImageURL(org.Image)
+
 		response = append(response, models.OrganizationResponse{
 			ID:           org.ID,
 			Name:         org.Name,
@@ -55,7 +60,8 @@ func (h *OrganizationHandler) GetOrganizations(c *fiber.Ctx) error {
 			Description:  org.Description,
 			Email:        org.Email,
 			Phone:        org.Phone,
-			Logo:         org.Logo,
+			Logo:         logoURL,
+			Image:        imageURL,
 			CreatedDate:  org.CreatedDate,
 			ModifiedDate: org.ModifiedDate,
 		})
@@ -90,6 +96,10 @@ func (h *OrganizationHandler) GetOrganization(c *fiber.Ctx) error {
 		isActive = *org.IsActive
 	}
 
+	// Convert relative image paths to full URLs
+	logoURL := utils.GetImageURL(org.Logo)
+	imageURL := utils.GetImageURL(org.Image)
+
 	response := models.OrganizationResponse{
 		ID:           org.ID,
 		Name:         org.Name,
@@ -101,7 +111,8 @@ func (h *OrganizationHandler) GetOrganization(c *fiber.Ctx) error {
 		Description:  org.Description,
 		Email:        org.Email,
 		Phone:        org.Phone,
-		Logo:         org.Logo,
+		Logo:         logoURL,
+		Image:        imageURL,
 		CreatedDate:  org.CreatedDate,
 		ModifiedDate: org.ModifiedDate,
 	}
@@ -138,6 +149,7 @@ func (h *OrganizationHandler) CreateOrganization(c *fiber.Ctx) error {
 		Email:       req.Email,
 		Phone:       &req.Phone,
 		Logo:        &req.Logo,
+		Image:       &req.Image,
 	})
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.APIResponse{
@@ -164,6 +176,7 @@ func (h *OrganizationHandler) CreateOrganization(c *fiber.Ctx) error {
 		Email:        org.Email,
 		Phone:        org.Phone,
 		Logo:         org.Logo,
+		Image:        org.Image,
 		CreatedDate:  org.CreatedDate,
 		ModifiedDate: org.ModifiedDate,
 	}
@@ -209,6 +222,7 @@ func (h *OrganizationHandler) UpdateOrganization(c *fiber.Ctx) error {
 		Email:       req.Email,
 		Phone:       &req.Phone,
 		Logo:        &req.Logo,
+		Image:       &req.Image,
 	})
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(models.APIResponse{
@@ -235,6 +249,7 @@ func (h *OrganizationHandler) UpdateOrganization(c *fiber.Ctx) error {
 		Email:        org.Email,
 		Phone:        org.Phone,
 		Logo:         org.Logo,
+		Image:        org.Image,
 		CreatedDate:  org.CreatedDate,
 		ModifiedDate: org.ModifiedDate,
 	}

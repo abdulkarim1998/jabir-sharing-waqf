@@ -5,6 +5,7 @@ import Instagram from '@/assets/icons/Instagram'
 import Twitter from '@/assets/icons/Twitter'
 import { useStyles } from './FoundationInfo.styles'
 import { Link } from 'react-router-dom'
+import { getOrganizationImageUrl } from '@/utils/imageUtils'
 
 interface Props {
   data: OrganizationCardData
@@ -26,7 +27,7 @@ const SmallScreenView = ({ data }: Props): JSX.Element => {
   return (
     <Group className={classes.hiddenDesktop}>
       <Box className={classes.imgBox}>
-        <img src={data.logo} className={classes.logo} />
+        <img src={getOrganizationImageUrl(data.image, data.logo)} className={classes.logo} alt={data.name} />
       </Box>
       <Box className={classes.titleDescriptionBox}>
         <Text className={classes.title}>{data.name}</Text>

@@ -51,6 +51,7 @@ CREATE TABLE organizations (
     email VARCHAR(255) NOT NULL UNIQUE,
     phone VARCHAR(20),
     logo VARCHAR(500),
+    image VARCHAR(500),
     created_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     modified_date TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -64,6 +65,7 @@ CREATE TABLE projects (
     is_active BOOLEAN DEFAULT true,
     is_complete BOOLEAN DEFAULT false,
     address VARCHAR(500),
+    image VARCHAR(500),
     organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     created_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     modified_date TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -210,3 +212,5 @@ COMMENT ON COLUMN donations.donation_type IS 'Type of donation: regular, gift, a
 COMMENT ON COLUMN donations.payment_status IS 'Status of payment: Pending, Processing, Completed, Failed, Cancelled';
 COMMENT ON COLUMN projects.value IS 'Target amount for the project in Omani Rials';
 COMMENT ON COLUMN donations.amount IS 'Donation amount in Omani Rials';
+COMMENT ON COLUMN organizations.image IS 'Path to organization image stored in MinIO';
+COMMENT ON COLUMN projects.image IS 'Path to project image stored in MinIO';

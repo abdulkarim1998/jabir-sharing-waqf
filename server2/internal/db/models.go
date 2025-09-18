@@ -112,6 +112,7 @@ type Organization struct {
 	Email        string    `json:"email"`
 	Phone        *string   `json:"phone"`
 	Logo         *string   `json:"logo"`
+	Image        *string   `json:"image"`
 	CreatedDate  time.Time `json:"created_date"`
 	ModifiedDate time.Time `json:"modified_date"`
 }
@@ -135,6 +136,7 @@ type Project struct {
 	IsActive       *bool          `json:"is_active"`
 	IsComplete     *bool          `json:"is_complete"`
 	Address        *string        `json:"address"`
+	Image          *string        `json:"image"`
 	OrganizationID pgtype.UUID    `json:"organization_id"`
 	CreatedDate    time.Time      `json:"created_date"`
 	ModifiedDate   time.Time      `json:"modified_date"`

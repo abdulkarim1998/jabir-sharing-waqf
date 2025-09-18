@@ -55,6 +55,7 @@ type OrganizationResponse struct {
 	Email        string                     `json:"email"`
 	Phone        *string                    `json:"phone"`
 	Logo         *string                    `json:"logo"`
+	Image        *string                    `json:"image"`
 	CreatedDate  time.Time                  `json:"created_date"`
 	ModifiedDate time.Time                  `json:"modified_date"`
 	Projects     []ProjectResponse          `json:"projects,omitempty"`
@@ -69,6 +70,7 @@ type ProjectResponse struct {
 	IsActive       bool             `json:"is_active"`
 	IsComplete     bool             `json:"is_complete"`
 	Address        *string          `json:"address"`
+	Image          *string          `json:"image"`
 	OrganizationID uuid.UUID        `json:"organization_id"`
 	CreatedDate    time.Time        `json:"created_date"`
 	ModifiedDate   time.Time        `json:"modified_date"`

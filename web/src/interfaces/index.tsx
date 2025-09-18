@@ -10,6 +10,7 @@ export interface Organization {
   instagram: string
   website: string
   logo: string
+  image?: string
 }
 
 export interface OrganizationTableData extends Omit<Organization, 'isActive'> {
@@ -28,6 +29,7 @@ export interface OrganizationCardData {
   projectValue: number
   payments: number
   logo: string
+  image?: string
   donors: number
   projects: number
   totalAmount: number
@@ -60,6 +62,7 @@ export interface ProjectCardData {
   value: number
   location: string
   organizationId: string
+  image?: string
 }
 
 export interface ProjectCardProps {
@@ -92,6 +95,7 @@ export interface Project {
   isActive: boolean
   isComplete: boolean
   address: string
+  image?: string
 }
 
 export enum WaqfType {

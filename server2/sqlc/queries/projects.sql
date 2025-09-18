@@ -11,9 +11,9 @@ ORDER BY created_date DESC;
 
 -- name: CreateProject :one
 INSERT INTO projects (
-    title, description, value, address, organization_id
+    title, description, value, address, image, organization_id
 ) VALUES (
-    $1, $2, $3, $4, $5
+    $1, $2, $3, $4, $5, $6
 ) RETURNING *;
 
 -- name: UpdateProject :one
@@ -22,7 +22,8 @@ UPDATE projects SET
     description = $3,
     value = $4,
     address = $5,
-    is_complete = $6,
+    image = $6,
+    is_complete = $7,
     modified_date = NOW()
 WHERE id = $1 AND is_active = true
 RETURNING *;

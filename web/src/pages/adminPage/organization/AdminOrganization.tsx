@@ -62,6 +62,7 @@ const Organizations = (): JSX.Element => {
       instagram: '',
       website: '',
       logo: '',
+      image: '',
     },
   })
 
@@ -128,6 +129,44 @@ const Organizations = (): JSX.Element => {
                 ...prev,
                 logo: base64img,
               }))
+            }}
+          />
+        ),
+      },
+      {
+        accessorKey: 'image',
+        header: 'صورة المؤسسة',
+        Cell: ({ row }) => (
+          <div>
+            {row.original.image ? (
+              <img
+                src={row.original.image}
+                alt="صورة المؤسسة"
+                width={50}
+                height={50}
+                style={{ objectFit: 'cover', borderRadius: '4px' }}
+              />
+            ) : (
+              <span style={{ color: '#999' }}>لا توجد صورة</span>
+            )}
+          </div>
+        ),
+        Edit: () => (
+          <input
+            type="text"
+            placeholder="أدخل مسار الصورة"
+            value={organization.values.image}
+            onChange={(e) => {
+              organization.setValues((prev) => ({
+                ...prev,
+                image: e.target.value,
+              }))
+            }}
+            style={{
+              width: '100%',
+              padding: '8px',
+              border: '1px solid #ccc',
+              borderRadius: '4px'
             }}
           />
         ),

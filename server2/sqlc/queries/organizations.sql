@@ -7,9 +7,9 @@ SELECT * FROM organizations WHERE is_active = true ORDER BY name;
 -- name: CreateOrganization :one
 INSERT INTO organizations (
     name, location, twitter, instagram, website, description, 
-    email, phone, logo
+    email, phone, logo, image
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
 ) RETURNING *;
 
 -- name: UpdateOrganization :one
@@ -23,6 +23,7 @@ UPDATE organizations SET
     email = $8,
     phone = $9,
     logo = $10,
+    image = $11,
     modified_date = NOW()
 WHERE id = $1 AND is_active = true
 RETURNING *;
