@@ -68,34 +68,25 @@ const Footer = ({ links }: HeaderProps): JSX.Element => {
           </div>
         </div>
         <div className="mr-auto grid grid-cols-1 sm:grid-cols-2 justify-end w-full gap-3">
-          <div className="relative min-h-[62px]">
+          <div className="relative min-h-[100px]">
             <img
-              src="/sohar-logo.svg"
+              src="/sohar-islamic-logo.svg"
               alt="بنك صحار"
               sizes="100vw"
-              className="object-contain"
+              className="object-contain w-full h-full"
             />
           </div>
-          <div className="relative min-h-[62px]">
+          <div className="relative min-h-[100px]">
             <img
               src="/jf-logo-white.png"
               alt="مؤسسة الإمام جابر بن زيد الوقفية"
-              className="object-contain"
+              className="object-contain w-full h-full"
             />
           </div>
         </div>
       </div>
       <div className="mx-auto max-w-screen-2xl mt-7 px-8 flex lg:flex-row flex-col gap-5 justify-between items-center it ">
         <p> جميع الحقوق محفوظة © 2023 | مؤسسة الإمام جابر بن زيد الوقفية</p>
-        <a href="https://rihal.om/">
-          <img
-            src="/img/PoweredByRihal.svg"
-            alt="شركة رحال التقنية"
-            width={184}
-            height={52}
-            className="object-contain"
-          />
-        </a>
       </div>
     </div>
   )
