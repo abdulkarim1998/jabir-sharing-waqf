@@ -9,6 +9,7 @@ type Config struct {
 	Database DatabaseConfig
 	Server   ServerConfig
 	Auth     AuthConfig
+	Payment  PaymentConfig
 }
 
 type DatabaseConfig struct {
@@ -34,6 +35,19 @@ type AuthConfig struct {
 	TokenURL     string
 }
 
+type PaymentConfig struct {
+	SIPG SIPGConfig
+}
+
+type SIPGConfig struct {
+	MerchantID  string
+	AccessCode  string
+	WorkingKey  string
+	GatewayURL  string
+	RedirectURL string
+	CancelURL   string
+}
+
 func Load() *Config {
 	return &Config{
 		Database: DatabaseConfig{
@@ -55,6 +69,16 @@ func Load() *Config {
 			ClientSecret: getEnv("KEYCLOAK_CLIENT_SECRET", "Ou2YGQbmyX8gIca6av4N9voTLTJcOf1i"),
 			JWTSecret:    getEnv("JWT_SECRET", "your-secret-key"),
 			TokenURL:     getEnv("KEYCLOAK_TOKEN_URL", "https://keycloak-02.rihal.tech/auth/realms/apps/protocol/openid-connect/token"),
+		},
+		Payment: PaymentConfig{
+			SIPG: SIPGConfig{
+				MerchantID:  getEnv("SIPG_MERCHANT_ID", "215077"),
+				AccessCode:  getEnv("SIPG_ACCESS_CODE", "AVJV37MC46AR74VJRA"),
+				WorkingKey:  getEnv("SIPG_WORKING_KEY", "D76A35AD2AC055B221D2E40E7986188F"),
+				GatewayURL:  getEnv("SIPG_GATEWAY_URL", "https://pguattrans.soharinternational.com/transaction.do?command=initiateTransaction"),
+				RedirectURL: getEnv("SIPG_REDIRECT_URL", "https://yoursite.com/response"),
+				CancelURL:   getEnv("SIPG_CANCEL_URL", "https://yoursite.com/cancel"),
+			},
 		},
 	}
 }

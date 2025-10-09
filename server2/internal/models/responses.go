@@ -166,7 +166,7 @@ type MonthlyDonationTrendResponse struct {
 type DonationResponse struct {
 	ID                   uuid.UUID       `json:"id"`
 	ProjectID            uuid.UUID       `json:"project_id"`
-	DonorName            string          `json:"donor_name"`
+	DonorName            *string         `json:"donor_name"`
 	DonorEmail           *string         `json:"donor_email"`
 	DonorPhone           *string         `json:"donor_phone"`
 	Amount               decimal.Decimal `json:"amount"`

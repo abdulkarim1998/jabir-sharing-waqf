@@ -46,7 +46,7 @@ CREATE TABLE projects (
 CREATE TABLE donations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-    donor_name VARCHAR(255) NOT NULL,
+    donor_name VARCHAR(255),
     donor_email VARCHAR(255),
     donor_phone VARCHAR(20),
     amount DECIMAL(15,2) NOT NULL CHECK (amount > 0),
@@ -58,6 +58,7 @@ CREATE TABLE donations (
     recipient_phone VARCHAR(20),
     is_anonymous BOOLEAN DEFAULT false,
     -- Payment tracking
+    order_id VARCHAR(255) UNIQUE,
     payment_status payment_status DEFAULT 'Pending',
     payment_reference VARCHAR(255),
     payment_transaction_id VARCHAR(255),
@@ -82,3 +83,4 @@ CREATE INDEX idx_donations_project_id ON donations(project_id);
 CREATE INDEX idx_donations_donor_email ON donations(donor_email);
 CREATE INDEX idx_donations_payment_status ON donations(payment_status);
 CREATE INDEX idx_donations_created_date ON donations(created_date);
+CREATE INDEX idx_donations_order_id ON donations(order_id);

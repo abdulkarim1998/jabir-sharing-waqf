@@ -16,9 +16,9 @@ SELECT * FROM donations WHERE id = $1 LIMIT 1;
 INSERT INTO donations (
     project_id, donor_name, donor_email, donor_phone, amount, 
     donation_type, message, recipient_name, recipient_email, 
-    recipient_phone, is_anonymous, payment_status, payment_reference
+    recipient_phone, is_anonymous, order_id, payment_status, payment_reference
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14
 ) RETURNING *;
 
 -- name: UpdateDonationPaymentStatus :one
@@ -72,3 +72,14 @@ WHERE p.organization_id = $1 AND d.payment_status = 'Completed'
 GROUP BY d.donor_name, d.donor_email
 ORDER BY total_donated DESC
 LIMIT $2;
+
+-- name: GetDonationByOrderID :one
+SELECT * FROM donations WHERE order_id = $1 LIMIT 1;
+
+-- name: UpdateDonationPaymentStatusByOrderID :one
+UPDATE donations SET
+    payment_status = $2,
+    payment_transaction_id = $3,
+    modified_date = NOW()
+WHERE order_id = $1
+RETURNING *;

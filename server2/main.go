@@ -18,6 +18,7 @@ import (
 	"jabir-waqf-go/internal/config"
 	"jabir-waqf-go/internal/db"
 	"jabir-waqf-go/internal/handlers"
+	"jabir-waqf-go/internal/payment"
 	"jabir-waqf-go/pkg/validator"
 )
 
@@ -42,12 +43,27 @@ func main() {
 	validator := validator.New()
 	minioConfig := config.NewMinioConfig()
 
+	// Initialize payment service
+	paymentService, err := payment.NewSIPGService(&payment.SIPGConfig{
+		MerchantID:  cfg.Payment.SIPG.MerchantID,
+		AccessCode:  cfg.Payment.SIPG.AccessCode,
+		WorkingKey:  cfg.Payment.SIPG.WorkingKey,
+		GatewayURL:  cfg.Payment.SIPG.GatewayURL,
+		RedirectURL: cfg.Payment.SIPG.RedirectURL,
+		CancelURL:   cfg.Payment.SIPG.CancelURL,
+	})
+	if err != nil {
+		log.Fatal("Failed to initialize payment service:", err)
+	}
+	log.Println("Payment service initialized successfully")
+
 	// Initialize handlers
 	organizationHandler := handlers.NewOrganizationHandler(queries, validator)
 	projectHandler := handlers.NewProjectHandler(queries, validator, minioConfig)
 	donationHandler := handlers.NewDonationHandler(queries, validator)
 	dashboardHandler := handlers.NewDashboardHandler(queries)
 	uploadHandler := handlers.NewUploadHandler(minioConfig)
+	paymentHandler := handlers.NewPaymentHandler(paymentService, queries, validator)
 
 	// Initialize Fiber app
 	app := fiber.New(fiber.Config{
@@ -74,7 +90,7 @@ func main() {
 	}))
 
 	// Routes
-	setupRoutes(app, organizationHandler, projectHandler, donationHandler, dashboardHandler, uploadHandler)
+	setupRoutes(app, organizationHandler, projectHandler, donationHandler, dashboardHandler, uploadHandler, paymentHandler)
 
 	// Start server
 	go func() {
@@ -128,6 +144,7 @@ func setupRoutes(
 	donationHandler *handlers.DonationHandler,
 	dashboardHandler *handlers.DashboardHandler,
 	uploadHandler *handlers.UploadHandler,
+	paymentHandler *handlers.PaymentHandler,
 ) {
 	// API v1 routes
 	api := app.Group("/api")
@@ -181,4 +198,9 @@ func setupRoutes(
 
 	// Image serving route
 	api.Get("/images/*", uploadHandler.ServeImage)
+
+	// Payment routes
+	payments := api.Group("/payments")
+	payments.Post("/initiate", paymentHandler.InitiatePayment)
+	payments.Post("/callback", paymentHandler.HandleCallback)
 }
