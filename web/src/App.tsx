@@ -8,6 +8,7 @@ import {
   OrganizationTabs,
   FoundationProfile,
   WaqfFlowController,
+  QuickCheckout,
 } from './pages'
 import './styles/fonts.scss'
 // import { UserProvider } from './context/user'
@@ -48,6 +49,8 @@ const App = (): JSX.Element => {
         <BrowserRouter basename="/waqf">
           <Routes>
             <Route path="/" element={<Organization />} />
+            
+            <Route path="/quick-checkout" element={<QuickCheckout />} />
 
             <Route
               path="/project/id/:projectId/waqfType"

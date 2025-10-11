@@ -14,7 +14,6 @@ import { useNavigate } from 'react-router-dom'
 import useStyles from './ProjectCard.styles'
 import { useState } from 'react'
 import useFinancialStatus from '@/hooks/useFinancialStatus'
-import usePayment from '@/hooks/usePayment'
 import useWaqfType from '@/hooks/useWaqfType'
 import { getProjectImageUrl } from '@/utils/imageUtils'
 
@@ -32,23 +31,18 @@ const ProjectCard = ({
   const { data: financialStatus } = useFinancialStatus(project.id)
   const { data: waqfTypes } = useWaqfType()
   const waqfTypeId = waqfTypes?.find((type) => type.name === 'personal')?.id
-  const { donate } = usePayment(project.id, waqfTypeId)
   const overValue = financialStatus?.totalDonatedAmount > project.value
 
   const percentagePaid =
     (financialStatus?.totalDonatedAmount / project.value) * 100
 
   const handleSubmit = () => {
-    donate({
-      projectId: project.id,
-      waqfTypeId: waqfTypeId,
-      amount: sahm,
-      donorName: '',
-      donorEmail: '',
-      donorPhoneNumber: '',
-      numberOfSaham: parseInt(sahm),
-      waqfType: 1,
-      giftDetails: [],
+    navigate('/quick-checkout', {
+      state: {
+        amount: sahm,
+        projectId: project.id,
+        waqfTypeId: waqfTypeId,
+      },
     })
   }
 

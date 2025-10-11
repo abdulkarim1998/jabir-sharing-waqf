@@ -25,36 +25,36 @@ help:
 
 # Install dependencies
 deps:
-	go mod download
-	go mod tidy
+	cd server2 && go mod download
+	cd server2 && go mod tidy
 
 # Generate SQLC code
 sqlc:
-	sqlc generate
+	cd server2 && sqlc generate
 
 # Build the application
 build:
-	go build -o bin/jabir-waqf-api cmd/api/main.go
+	cd server2 && go build -o bin/jabir-waqf-api cmd/api/main.go
 
 # Run the application
 run:
-	go run cmd/api/main.go
+	cd server2 && go run cmd/api/main.go
 
 # Run tests
 test:
-	go test ./... -v
+	cd server2 && go test ./... -v
 
 # Clean build artifacts
 clean:
-	rm -rf bin/
-	go clean
+	rm -rf server2/bin/
+	cd server2 && go clean
 
 # Database migrations
 migrate-up:
-	migrate -path migrations -database "$(DATABASE_URL)" up
+	migrate -path server2/migrations -database "$(DATABASE_URL)" up
 
 migrate-down:
-	migrate -path migrations -database "$(DATABASE_URL)" down
+	migrate -path server2/migrations -database "$(DATABASE_URL)" down
 
 # Docker commands
 docker-build:
