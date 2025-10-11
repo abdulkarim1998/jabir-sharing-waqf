@@ -52,3 +52,19 @@ export const getOrganizationImageUrl = (image?: string, fallback?: string): stri
 export const getProjectImageUrl = (image?: string): string => {
   return getImageUrl(image)
 }
+
+/**
+ * Get the full URL for a project logo
+ * @param logo - The logo filename or URL
+ * @param fallback - Fallback logo (usually organization logo)
+ * @returns Full URL to the logo
+ */
+export const getProjectLogoUrl = (logo?: string, fallback?: string): string => {
+  if (logo) {
+    return getImageUrl(logo)
+  }
+  if (fallback) {
+    return fallback
+  }
+  return ''
+}

@@ -213,20 +213,22 @@ func (s *SeederConfig) SeedImages() error {
 		}
 	}
 
-	// Project images
+	// Project images and logos
 	projects := []struct {
-		name    string
-		imgPath string
+		name     string
+		imgPath  string
+		logoPath string
 	}{
-		{"Mosque Project", "project/mosque-hidaya.jpg"},
-		{"Quran School", "project/quran-school.jpg"},
-		{"Medical Center", "project/medical-center.jpg"},
-		{"Knowledge Library", "project/knowledge-library.jpg"},
-		{"Craftsmen Training", "project/craftsmen-training.jpg"},
-		{"Widows & Orphans", "project/widows-orphans.jpg"},
+		{"Mosque Project", "project/mosque-hidaya.jpg", "project/mosque-logo.png"},
+		{"Quran School", "project/quran-school.jpg", "project/quran-logo.png"},
+		{"Medical Center", "project/medical-center.jpg", "project/medical-logo.png"},
+		{"Knowledge Library", "project/knowledge-library.jpg", "project/library-logo.png"},
+		{"Craftsmen Training", "project/craftsmen-training.jpg", "project/craftsmen-logo.png"},
+		{"Widows & Orphans", "project/widows-orphans.jpg", "project/widows-logo.png"},
 	}
 
 	for i, project := range projects {
+		// Generate and upload image
 		imgData, err := imageGen.GenerateImage(project.name, 800, 500, projectColors[i%len(projectColors)])
 		if err != nil {
 			log.Printf("Warning: Failed to generate image for %s: %v", project.name, err)
@@ -237,6 +239,19 @@ func (s *SeederConfig) SeedImages() error {
 			log.Printf("Warning: Failed to upload image for %s: %v", project.name, err)
 		} else {
 			log.Printf("✅ Uploaded image: %s", project.imgPath)
+		}
+
+		// Generate and upload logo (smaller, square)
+		logoData, err := imageGen.GenerateImage(project.name+" Logo", 200, 200, projectColors[i%len(projectColors)])
+		if err != nil {
+			log.Printf("Warning: Failed to generate logo for %s: %v", project.name, err)
+			continue
+		}
+
+		if err := s.uploadImageToMinio(project.logoPath, logoData, "image/jpeg"); err != nil {
+			log.Printf("Warning: Failed to upload logo for %s: %v", project.name, err)
+		} else {
+			log.Printf("✅ Uploaded logo: %s", project.logoPath)
 		}
 	}
 

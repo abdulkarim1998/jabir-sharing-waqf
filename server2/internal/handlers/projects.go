@@ -66,6 +66,7 @@ func (h *ProjectHandler) GetProjects(c *fiber.Ctx) error {
 			IsComplete:     isComplete,
 			Address:        project.Address,
 			Image:          utils.GetImageURL(project.Image),
+			Logo:           utils.GetImageURL(project.Logo),
 			OrganizationID: pgUUIDToUUID(project.OrganizationID),
 			CreatedDate:    project.CreatedDate,
 			ModifiedDate:   project.ModifiedDate,
@@ -122,6 +123,7 @@ func (h *ProjectHandler) GetProject(c *fiber.Ctx) error {
 		IsComplete:     isComplete,
 		Address:        project.Address,
 		Image:          project.Image,
+		Logo:           project.Logo,
 		OrganizationID: pgUUIDToUUID(project.OrganizationID),
 		CreatedDate:    project.CreatedDate,
 		ModifiedDate:   project.ModifiedDate,
@@ -179,6 +181,7 @@ func (h *ProjectHandler) GetProjectsByOrganization(c *fiber.Ctx) error {
 			IsComplete:     isComplete,
 			Address:        project.Address,
 			Image:          utils.GetImageURL(project.Image),
+			Logo:           utils.GetImageURL(project.Logo),
 			OrganizationID: pgUUIDToUUID(project.OrganizationID),
 			CreatedDate:    project.CreatedDate,
 			ModifiedDate:   project.ModifiedDate,
@@ -213,6 +216,7 @@ func (h *ProjectHandler) CreateProject(c *fiber.Ctx) error {
 		Value:          decimalToPgNumeric(req.Value),
 		Address:        &req.Address,
 		Image:          &req.Image,
+		Logo:           &req.Logo,
 		OrganizationID: uuidToPgUUID(req.OrganizationID),
 	})
 	if err != nil {
@@ -249,6 +253,7 @@ func (h *ProjectHandler) CreateProject(c *fiber.Ctx) error {
 		IsComplete:     isCompleteCreate,
 		Address:        project.Address,
 		Image:          project.Image,
+		Logo:           project.Logo,
 		OrganizationID: pgUUIDToUUID(project.OrganizationID),
 		CreatedDate:    project.CreatedDate,
 		ModifiedDate:   project.ModifiedDate,
@@ -291,6 +296,7 @@ func (h *ProjectHandler) UpdateProject(c *fiber.Ctx) error {
 		Value:       decimalToPgNumeric(req.Value),
 		Address:     &req.Address,
 		Image:       &req.Image,
+		Logo:        &req.Logo,
 		IsComplete:  &req.IsComplete,
 	})
 	if err != nil {
@@ -327,6 +333,7 @@ func (h *ProjectHandler) UpdateProject(c *fiber.Ctx) error {
 		IsComplete:     isCompleteUpdate,
 		Address:        project.Address,
 		Image:          project.Image,
+		Logo:           project.Logo,
 		OrganizationID: pgUUIDToUUID(project.OrganizationID),
 		CreatedDate:    project.CreatedDate,
 		ModifiedDate:   project.ModifiedDate,

@@ -138,6 +138,7 @@ type Project struct {
 	IsComplete     *bool          `json:"is_complete"`
 	Address        *string        `json:"address"`
 	Image          *string        `json:"image"`
+	Logo           *string        `json:"logo"`
 	OrganizationID pgtype.UUID    `json:"organization_id"`
 	CreatedDate    time.Time      `json:"created_date"`
 	ModifiedDate   time.Time      `json:"modified_date"`

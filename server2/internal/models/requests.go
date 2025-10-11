@@ -76,6 +76,7 @@ type CreateProjectRequest struct {
 	Value          decimal.Decimal `json:"value" validate:"required,gt=0"`
 	Address        string          `json:"address" validate:"max=500"`
 	Image          string          `json:"image"`
+	Logo           string          `json:"logo"`
 	OrganizationID uuid.UUID       `json:"organization_id" validate:"required"`
 }
 
@@ -85,6 +86,7 @@ type UpdateProjectRequest struct {
 	Value       decimal.Decimal `json:"value" validate:"required,gt=0"`
 	Address     string          `json:"address" validate:"max=500"`
 	Image       string          `json:"image"`
+	Logo        string          `json:"logo"`
 	IsComplete  bool            `json:"is_complete"`
 }
 

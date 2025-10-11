@@ -61,7 +61,7 @@ VALUES
 -- SAMPLE PROJECTS
 -- ============================================================================
 
-INSERT INTO projects (id, title, description, value, address, organization_id, image)
+INSERT INTO projects (id, title, description, value, address, organization_id, image, logo)
 VALUES 
     (
         '6a5763c2-549b-4fcf-8911-2aa1f0c4ba21',
@@ -70,7 +70,8 @@ VALUES
         50000.00,
         'منطقة الهداية، مسقط',
         '3028b3a0-4d2c-439e-ae83-1de8c4d1c788',
-        'project/mosque-hidaya.jpg'
+        'project/mosque-hidaya.jpg',
+        'project/mosque-logo.png'
     ),
     (
         '8b9c1d2e-3f4a-5b6c-7d8e-9f0a1b2c3d4e',
@@ -79,7 +80,8 @@ VALUES
         75000.00,
         'الخوض، مسقط',
         '3028b3a0-4d2c-439e-ae83-1de8c4d1c788',
-        'project/quran-school.jpg'
+        'project/quran-school.jpg',
+        'project/quran-logo.png'
     ),
     (
         '1c2d3e4f-5a6b-7c8d-9e0f-1a2b3c4d5e6f',
@@ -88,7 +90,8 @@ VALUES
         120000.00,
         'صلالة المركز',
         '5c9490f0-68c9-4969-8663-ad90395f4acd',
-        'project/medical-center.jpg'
+        'project/medical-center.jpg',
+        'project/medical-logo.png'
     ),
     (
         '2d3e4f5a-6b7c-8d9e-0f1a-2b3c4d5e6f7a',
@@ -97,7 +100,8 @@ VALUES
         35000.00,
         'نزوى التاريخية',
         '7d8e2f90-98a1-4b6c-9f7e-12345abcdef0',
-        'project/knowledge-library.jpg'
+        'project/knowledge-library.jpg',
+        'project/library-logo.png'
     ),
     (
         '3e4f5a6b-7c8d-9e0f-1a2b-3c4d5e6f7a8b',
@@ -106,7 +110,8 @@ VALUES
         45000.00,
         'صحار الصناعية',
         '9a1b2c3d-4e5f-6789-abcd-ef0123456789',
-        'project/craftsmen-training.jpg'
+        'project/craftsmen-training.jpg',
+        'project/craftsmen-logo.png'
     ),
     (
         '4f5a6b7c-8d9e-0f1a-2b3c-4d5e6f7a8b9c',
@@ -115,7 +120,8 @@ VALUES
         80000.00,
         'مختلف محافظات السلطنة',
         '5c9490f0-68c9-4969-8663-ad90395f4acd',
-        'project/widows-orphans.jpg'
+        'project/widows-orphans.jpg',
+        'project/widows-logo.png'
     );
 
 -- ============================================================================

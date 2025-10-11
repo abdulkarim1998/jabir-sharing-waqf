@@ -15,7 +15,7 @@ import useStyles from './ProjectCard.styles'
 import { useState } from 'react'
 import useFinancialStatus from '@/hooks/useFinancialStatus'
 import useWaqfType from '@/hooks/useWaqfType'
-import { getProjectImageUrl } from '@/utils/imageUtils'
+import { getProjectImageUrl, getProjectLogoUrl } from '@/utils/imageUtils'
 
 const ProjectCard = ({
   project,
@@ -53,9 +53,9 @@ const ProjectCard = ({
           <Group spacing={theme.spacing.xs} className={classes.head}>
             <img
               key={project.id}
-              src={orgLogo}
+              src={getProjectLogoUrl(project.logo, orgLogo)}
               className={classes.logo}
-              alt="شعار المؤسسة"
+              alt="شعار المشروع"
             />
 
             <Box>

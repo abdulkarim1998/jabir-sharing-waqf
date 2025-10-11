@@ -38,6 +38,7 @@ CREATE TABLE projects (
     is_complete BOOLEAN DEFAULT false,
     address VARCHAR(500),
     image VARCHAR(500),
+    logo VARCHAR(500),
     organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     created_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     modified_date TIMESTAMPTZ NOT NULL DEFAULT NOW()

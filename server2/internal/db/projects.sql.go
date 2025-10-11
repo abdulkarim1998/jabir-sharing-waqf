@@ -14,10 +14,10 @@ import (
 
 const CreateProject = `-- name: CreateProject :one
 INSERT INTO projects (
-    title, description, value, address, image, organization_id
+    title, description, value, address, image, logo, organization_id
 ) VALUES (
-    $1, $2, $3, $4, $5, $6
-) RETURNING id, title, description, value, is_active, is_complete, address, image, organization_id, created_date, modified_date
+    $1, $2, $3, $4, $5, $6, $7
+) RETURNING id, title, description, value, is_active, is_complete, address, image, logo, organization_id, created_date, modified_date
 `
 
 type CreateProjectParams struct {
@@ -26,6 +26,7 @@ type CreateProjectParams struct {
 	Value          pgtype.Numeric `json:"value"`
 	Address        *string        `json:"address"`
 	Image          *string        `json:"image"`
+	Logo           *string        `json:"logo"`
 	OrganizationID pgtype.UUID    `json:"organization_id"`
 }
 
@@ -36,6 +37,7 @@ func (q *Queries) CreateProject(ctx context.Context, arg *CreateProjectParams) (
 		arg.Value,
 		arg.Address,
 		arg.Image,
+		arg.Logo,
 		arg.OrganizationID,
 	)
 	var i Project
@@ -48,6 +50,7 @@ func (q *Queries) CreateProject(ctx context.Context, arg *CreateProjectParams) (
 		&i.IsComplete,
 		&i.Address,
 		&i.Image,
+		&i.Logo,
 		&i.OrganizationID,
 		&i.CreatedDate,
 		&i.ModifiedDate,
@@ -68,7 +71,7 @@ func (q *Queries) DeleteProject(ctx context.Context, id uuid.UUID) error {
 }
 
 const GetProjectByID = `-- name: GetProjectByID :one
-SELECT id, title, description, value, is_active, is_complete, address, image, organization_id, created_date, modified_date FROM projects WHERE id = $1 AND is_active = true LIMIT 1
+SELECT id, title, description, value, is_active, is_complete, address, image, logo, organization_id, created_date, modified_date FROM projects WHERE id = $1 AND is_active = true LIMIT 1
 `
 
 func (q *Queries) GetProjectByID(ctx context.Context, id uuid.UUID) (*Project, error) {
@@ -83,6 +86,7 @@ func (q *Queries) GetProjectByID(ctx context.Context, id uuid.UUID) (*Project, e
 		&i.IsComplete,
 		&i.Address,
 		&i.Image,
+		&i.Logo,
 		&i.OrganizationID,
 		&i.CreatedDate,
 		&i.ModifiedDate,
@@ -138,7 +142,7 @@ func (q *Queries) GetProjectFinancialStatus(ctx context.Context, id uuid.UUID) (
 }
 
 const GetProjectsByOrganizationID = `-- name: GetProjectsByOrganizationID :many
-SELECT id, title, description, value, is_active, is_complete, address, image, organization_id, created_date, modified_date FROM projects 
+SELECT id, title, description, value, is_active, is_complete, address, image, logo, organization_id, created_date, modified_date FROM projects 
 WHERE organization_id = $1 AND is_active = true 
 ORDER BY created_date DESC
 `
@@ -161,6 +165,7 @@ func (q *Queries) GetProjectsByOrganizationID(ctx context.Context, organizationI
 			&i.IsComplete,
 			&i.Address,
 			&i.Image,
+			&i.Logo,
 			&i.OrganizationID,
 			&i.CreatedDate,
 			&i.ModifiedDate,
@@ -176,7 +181,7 @@ func (q *Queries) GetProjectsByOrganizationID(ctx context.Context, organizationI
 }
 
 const ListProjects = `-- name: ListProjects :many
-SELECT id, title, description, value, is_active, is_complete, address, image, organization_id, created_date, modified_date FROM projects WHERE is_active = true ORDER BY created_date DESC
+SELECT id, title, description, value, is_active, is_complete, address, image, logo, organization_id, created_date, modified_date FROM projects WHERE is_active = true ORDER BY created_date DESC
 `
 
 func (q *Queries) ListProjects(ctx context.Context) ([]*Project, error) {
@@ -197,6 +202,7 @@ func (q *Queries) ListProjects(ctx context.Context) ([]*Project, error) {
 			&i.IsComplete,
 			&i.Address,
 			&i.Image,
+			&i.Logo,
 			&i.OrganizationID,
 			&i.CreatedDate,
 			&i.ModifiedDate,
@@ -218,10 +224,11 @@ UPDATE projects SET
     value = $4,
     address = $5,
     image = $6,
-    is_complete = $7,
+    logo = $7,
+    is_complete = $8,
     modified_date = NOW()
 WHERE id = $1 AND is_active = true
-RETURNING id, title, description, value, is_active, is_complete, address, image, organization_id, created_date, modified_date
+RETURNING id, title, description, value, is_active, is_complete, address, image, logo, organization_id, created_date, modified_date
 `
 
 type UpdateProjectParams struct {
@@ -231,6 +238,7 @@ type UpdateProjectParams struct {
 	Value       pgtype.Numeric `json:"value"`
 	Address     *string        `json:"address"`
 	Image       *string        `json:"image"`
+	Logo        *string        `json:"logo"`
 	IsComplete  *bool          `json:"is_complete"`
 }
 
@@ -242,6 +250,7 @@ func (q *Queries) UpdateProject(ctx context.Context, arg *UpdateProjectParams) (
 		arg.Value,
 		arg.Address,
 		arg.Image,
+		arg.Logo,
 		arg.IsComplete,
 	)
 	var i Project
@@ -254,6 +263,7 @@ func (q *Queries) UpdateProject(ctx context.Context, arg *UpdateProjectParams) (
 		&i.IsComplete,
 		&i.Address,
 		&i.Image,
+		&i.Logo,
 		&i.OrganizationID,
 		&i.CreatedDate,
 		&i.ModifiedDate,

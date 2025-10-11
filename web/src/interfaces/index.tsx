@@ -63,6 +63,7 @@ export interface ProjectCardData {
   location: string
   organizationId: string
   image?: string
+  logo?: string
 }
 
 export interface ProjectCardProps {
@@ -96,6 +97,7 @@ export interface Project {
   isComplete: boolean
   address: string
   image?: string
+  logo?: string
 }
 
 export enum WaqfType {
