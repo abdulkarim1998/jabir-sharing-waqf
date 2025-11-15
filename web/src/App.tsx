@@ -46,7 +46,7 @@ const App = (): JSX.Element => {
       }}
     >
       {/* <UserProvider> */}
-        <BrowserRouter basename="/waqf">
+        <BrowserRouter basename="/">
           <Routes>
             <Route path="/" element={<Organization />} />
             

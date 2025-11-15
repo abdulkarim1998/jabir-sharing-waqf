@@ -1,8 +1,8 @@
-FROM node:16 as base
+FROM node:16 AS base
  
 RUN npm i -g pnpm@8.3.1
 
-FROM base as builder
+FROM base AS builder
 
 WORKDIR /app
 
@@ -17,12 +17,14 @@ COPY . /app/
 
 RUN pnpm build
 
-FROM nginx:1.23.0-alpine as prod
+FROM node:16-alpine AS prod
 
-RUN rm -rf /etc/nginx/conf.d/*.conf
-COPY ./nginx/custom.conf /etc/nginx/conf.d/custom.conf
+WORKDIR /app
 
-COPY --from=builder /app/dist/ /usr/share/nginx/html
+RUN npm install -g serve
 
-#This can be used in the production if we want to enable the nignx to serve the website
-CMD ["nginx","-g","daemon off;"]
+COPY --from=builder /app/dist/ /app/dist/
+
+EXPOSE 3000
+
+CMD ["serve", "-s", "dist", "-l", "3000"]

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 const FooterLink = ({ links }: HeaderProps): JSX.Element => {
   const { pathname } = useLocation()
-  const path = `${window.location.origin}/waqf${pathname}`
+  const path = `${window.location.origin}${pathname}`
 
   return (
     <div className="flex flex-col gap-2">

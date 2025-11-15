@@ -10,7 +10,7 @@ function removeTrailingSlash(str: string) {
 const HeaderLink = ({ links }: HeaderProps): JSX.Element => {
   const { pathname } = useLocation()
 
-  const path = removeTrailingSlash(`${window.location.origin}/waqf${pathname}`)
+  const path = removeTrailingSlash(`${window.location.origin}${pathname}`)
 
   return (
     <div className="text-[#787878] text-sm flex gap-5 lg:gap-7 bg-transparent lg:flex-row flex-col items-center">

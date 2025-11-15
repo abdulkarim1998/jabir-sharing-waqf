@@ -1,6 +1,6 @@
 import axiosStatic, { AxiosInstance, AxiosResponse } from 'axios'
 
-export const axios = axiosStatic.create({ baseURL: '/api/' })
+export const axios = axiosStatic.create({ baseURL: 'http://localhost:8081/api/' })
 
 // API Response wrapper interface
 interface APIResponse<T> {

@@ -16,15 +16,15 @@ const Page = ({ children }: PageProps): JSX.Element => {
     { to: '/about', label: 'حول المؤسسة' },
     { to: '/boardmember', label: 'مجلس الإدارة' },
     { to: '/about-waqf', label: 'الوقف' },
-    { to: '/waqf/jf', label: 'وقف المؤسسة' },
-    { to: '/waqf', label: 'بوابة الشراكة الوقفية' },
-    { to: '/waqf/dashboard', label: 'التقارير' },
+    { to: '/jf', label: 'وقف المؤسسة' },
+    { to: '/', label: 'بوابة الشراكة الوقفية' },
+    { to: '/dashboard', label: 'التقارير' },
   ]
 
   if (user) {
     links.push(
-      { to: '/waqf/organization', label: 'المؤسسات' },
-      { to: '/waqf/user', label: 'المستخدمين' }
+      { to: '/organization', label: 'المؤسسات' },
+      { to: '/user', label: 'المستخدمين' }
     )
   }
 

@@ -10,7 +10,7 @@ const keycloak = new Keycloak({
   url: 'https://keycloak-02.rihal.tech',
 })
 
-export const axiosServer = axios.create({ baseURL: '/api/' })
+export const axiosServer = axios.create({ baseURL: 'http://localhost:8081/api/' })
 
 interface UserContextValue {
   user: User
@@ -74,7 +74,7 @@ export const UserProvider = ({
     keycloak
       .init({
         onLoad: 'check-sso',
-        silentCheckSsoRedirectUri: `${window.location.origin}/waqf/silent-check-sso.html`,
+        silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
       })
       .then(async () => setInitialized(true))
       .catch((error) => console.log('failed to init keycloak: ', error))
@@ -101,12 +101,12 @@ export const UserProvider = ({
   }, [])
 
   const logout = () => {
-    keycloak.logout({ redirectUri: `${window.location.origin}/waqf` })
+    keycloak.logout({ redirectUri: `${window.location.origin}/` })
   }
 
   const login = () => {
     keycloak.login({
-      redirectUri: `${window.location.origin}/waqf/organization`,
+      redirectUri: `${window.location.origin}/organization`,
     })
   }
 

@@ -46,7 +46,7 @@ const DataTable = <T extends { id: string }>({
   const [id, setId] = useState('')
   const { user } = useUser()
   const isAdmin = user.role == UserRole.ADMIN
-  const organizationPage = location.pathname === `/waqf/organization`
+  const organizationPage = location.pathname === `/organization`
 
   const table = useMantineReactTable({
     columns,

@@ -17,20 +17,20 @@ const AdminPage = ({ children }: PageProps): JSX.Element => {
     { to: '/about', label: 'حول المؤسسة' },
     { to: '/boardmember', label: 'مجلس الإدارة' },
     { to: '/about-waqf', label: 'الوقف' },
-    { to: '/waqf/jf', label: 'وقف المؤسسة' },
-    { to: '/waqf', label: 'بوابة الشراكة الوقفية' },
-    { to: '/waqf/dashboard', label: 'التقارير' },
-    { to: '/waqf/organization', label: 'المؤسسات' },
-    user?.role == 'admin' && { to: '/waqf/user', label: 'المستخدمين' },
+    { to: '/jf', label: 'وقف المؤسسة' },
+    { to: '/', label: 'بوابة الشراكة الوقفية' },
+    { to: '/dashboard', label: 'التقارير' },
+    { to: '/organization', label: 'المؤسسات' },
+    user?.role == 'admin' && { to: '/user', label: 'المستخدمين' },
   ]
   const links_2 = [
     { to: '/', label: 'الرئيسية' },
     { to: '/about', label: 'حول المؤسسة' },
     { to: '/boardmember', label: 'مجلس الإدارة' },
     { to: '/about-waqf', label: 'الوقف' },
-    { to: '/waqf/jf', label: 'وقف المؤسسة' },
-    { to: '/waqf', label: 'بوابة الشراكة الوقفية' },
-    { to: '/waqf/dashboard', label: 'التقارير' },
+    { to: '/jf', label: 'وقف المؤسسة' },
+    { to: '/', label: 'بوابة الشراكة الوقفية' },
+    { to: '/dashboard', label: 'التقارير' },
   ]
 
   const links = user ? links_1 : links_2
