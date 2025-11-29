@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { getOrganizationRequests, updateRequestStatus } from '../api';
+import { useNavigate } from 'react-router-dom';
+import { getOrganizationRequests } from '../api';
 
 export default function RequestsList() {
+  const navigate = useNavigate();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedRequest, setSelectedRequest] = useState(null);
 
   useEffect(() => {
     fetchRequests();
@@ -20,19 +21,6 @@ export default function RequestsList() {
       alert('فشل جلب الطلبات');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleStatusUpdate = async (id, status) => {
-    try {
-      await updateRequestStatus(id, status);
-      const statusText = status === 'approved' ? 'موافق عليه' : 'مرفوض';
-      alert(`تم ${statusText} الطلب بنجاح!`);
-      fetchRequests();
-      setSelectedRequest(null);
-    } catch (error) {
-      console.error('Error updating status:', error);
-      alert('فشل تحديث حالة الطلب');
     }
   };
 
@@ -57,11 +45,12 @@ export default function RequestsList() {
           {requests.map((request) => (
             <div
               key={request.id}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+              onClick={() => navigate(`/request/${request.id}`)}
+              className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-[#BC9B6A]"
             >
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold mb-2">{request.name}</h2>
+                  <h2 className="text-xl font-semibold mb-2 text-gray-800">{request.name}</h2>
                   <div className="space-y-1 text-gray-600">
                     <p>
                       <span className="font-medium">الهاتف:</span> {request.phone}
@@ -70,7 +59,7 @@ export default function RequestsList() {
                       <span className="font-medium">السجل التجاري:</span> {request.cr}
                     </p>
                     {request.description && (
-                      <p>
+                      <p className="line-clamp-2">
                         <span className="font-medium">الوصف:</span> {request.description}
                       </p>
                     )}
@@ -81,37 +70,27 @@ export default function RequestsList() {
 
                   {request.documents && request.documents.length > 0 && (
                     <div className="mt-4">
-                      <p className="font-medium mb-2">المستندات ({request.documents.length}):</p>
-                      <div className="flex flex-wrap gap-2">
-                        {request.documents.map((doc) => (
-                          <a
-                            key={doc.id}
-                            href={`http://localhost:8081${doc.document_url}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 underline text-sm"
-                          >
-                            عرض المستند
-                          </a>
-                        ))}
-                      </div>
+                      <p className="font-medium text-gray-700">
+                        📎 {request.documents.length} مستند مرفق
+                      </p>
                     </div>
                   )}
                 </div>
 
-                <div className="flex gap-2 mr-4">
-                  <button
-                    onClick={() => handleStatusUpdate(request.id, 'approved')}
-                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors"
+                <div className="mr-4 text-gray-400">
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    موافقة
-                  </button>
-                  <button
-                    onClick={() => handleStatusUpdate(request.id, 'rejected')}
-                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"
-                  >
-                    رفض
-                  </button>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
                 </div>
               </div>
             </div>

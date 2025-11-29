@@ -111,10 +111,9 @@ func (h *OrganizationRequestHandler) CreateOrganizationRequest(c *fiber.Ctx) err
 			continue
 		}
 
-		var requestIDPgType pgtype.UUID
-		if err := requestIDPgType.Scan(orgRequest.ID); err != nil {
-			log.Errorf("Failed to convert UUID for file %s: %v", file.Filename, err)
-			continue
+		requestIDPgType := pgtype.UUID{
+			Bytes: orgRequest.ID,
+			Valid: true,
 		}
 
 		doc, err := h.queries.CreateOrganizationRequestDocument(context.Background(), &db.CreateOrganizationRequestDocumentParams{
@@ -186,8 +185,10 @@ func (h *OrganizationRequestHandler) GetOrganizationRequests(c *fiber.Ctx) error
 
 	var responses []models.OrganizationRequestResponse
 	for _, req := range orgRequests {
-		var requestIDPgType pgtype.UUID
-		requestIDPgType.Scan(req.ID)
+		requestIDPgType := pgtype.UUID{
+			Bytes: req.ID,
+			Valid: true,
+		}
 
 		docs, _ := h.queries.GetOrganizationRequestDocuments(context.Background(), requestIDPgType)
 
@@ -243,8 +244,10 @@ func (h *OrganizationRequestHandler) GetOrganizationRequest(c *fiber.Ctx) error 
 		})
 	}
 
-	var requestIDPgType pgtype.UUID
-	requestIDPgType.Scan(req.ID)
+	requestIDPgType := pgtype.UUID{
+		Bytes: req.ID,
+		Valid: true,
+	}
 
 	docs, _ := h.queries.GetOrganizationRequestDocuments(context.Background(), requestIDPgType)
 

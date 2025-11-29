@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import RequestsList from './pages/RequestsList';
 import SubmitRequest from './pages/SubmitRequest';
+import RequestDetail from './pages/RequestDetail';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -15,6 +16,7 @@ function App() {
           <Routes>
             <Route path="/" element={<RequestsList />} />
             <Route path="/submit" element={<SubmitRequest />} />
+            <Route path="/request/:id" element={<RequestDetail />} />
           </Routes>
         </main>
 
