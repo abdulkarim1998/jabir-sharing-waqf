@@ -85,3 +85,31 @@ CREATE INDEX idx_donations_donor_email ON donations(donor_email);
 CREATE INDEX idx_donations_payment_status ON donations(payment_status);
 CREATE INDEX idx_donations_created_date ON donations(created_date);
 CREATE INDEX idx_donations_order_id ON donations(order_id);
+
+-- Organization registration requests
+CREATE TYPE organization_request_status AS ENUM (
+    'pending',
+    'approved',
+    'rejected'
+);
+
+CREATE TABLE organization_requests (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(200) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    cr VARCHAR(100) NOT NULL,
+    description TEXT,
+    status organization_request_status DEFAULT 'pending',
+    created_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    modified_date TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE organization_request_documents (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    request_id UUID NOT NULL REFERENCES organization_requests(id) ON DELETE CASCADE,
+    document_path VARCHAR(500) NOT NULL,
+    created_date TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_organization_requests_status ON organization_requests(status);
+CREATE INDEX idx_organization_request_documents_request_id ON organization_request_documents(request_id);

@@ -3,6 +3,8 @@
 -- ============================================================================
 
 -- Drop all tables in reverse dependency order
+DROP TABLE IF EXISTS organization_request_documents CASCADE;
+DROP TABLE IF EXISTS organization_requests CASCADE;
 DROP TABLE IF EXISTS permissions CASCADE;
 DROP TABLE IF EXISTS user_roles CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
@@ -13,6 +15,7 @@ DROP TABLE IF EXISTS projects CASCADE;
 DROP TABLE IF EXISTS organizations CASCADE;
 
 -- Drop custom types
+DROP TYPE IF EXISTS organization_request_status CASCADE;
 DROP TYPE IF EXISTS permission_scope CASCADE;
 DROP TYPE IF EXISTS permission_resource CASCADE;
 DROP TYPE IF EXISTS payment_status CASCADE;

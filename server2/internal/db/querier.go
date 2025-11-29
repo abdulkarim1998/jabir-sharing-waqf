@@ -14,8 +14,11 @@ import (
 type Querier interface {
 	CreateDonation(ctx context.Context, arg *CreateDonationParams) (*Donation, error)
 	CreateOrganization(ctx context.Context, arg *CreateOrganizationParams) (*Organization, error)
+	CreateOrganizationRequest(ctx context.Context, arg *CreateOrganizationRequestParams) (*OrganizationRequest, error)
+	CreateOrganizationRequestDocument(ctx context.Context, arg *CreateOrganizationRequestDocumentParams) (*OrganizationRequestDocument, error)
 	CreateProject(ctx context.Context, arg *CreateProjectParams) (*Project, error)
 	DeleteOrganization(ctx context.Context, id uuid.UUID) error
+	DeleteOrganizationRequestDocument(ctx context.Context, id uuid.UUID) error
 	DeleteProject(ctx context.Context, id uuid.UUID) error
 	GetDashboardReportByDateRange(ctx context.Context, arg *GetDashboardReportByDateRangeParams) (*GetDashboardReportByDateRangeRow, error)
 	GetDonationByID(ctx context.Context, id uuid.UUID) (*Donation, error)
@@ -30,6 +33,8 @@ type Querier interface {
 	GetOrganizationDonorsCount(ctx context.Context, organizationID pgtype.UUID) (int64, error)
 	GetOrganizationProjectCount(ctx context.Context, organizationID pgtype.UUID) (int64, error)
 	GetOrganizationProjectsTotalValue(ctx context.Context, organizationID pgtype.UUID) (interface{}, error)
+	GetOrganizationRequestByID(ctx context.Context, id uuid.UUID) (*OrganizationRequest, error)
+	GetOrganizationRequestDocuments(ctx context.Context, requestID pgtype.UUID) ([]*OrganizationRequestDocument, error)
 	GetOrganizationTotalDonations(ctx context.Context, organizationID pgtype.UUID) (interface{}, error)
 	GetProjectByID(ctx context.Context, id uuid.UUID) (*Project, error)
 	GetProjectCountByOrganizationID(ctx context.Context, organizationID pgtype.UUID) (int64, error)
@@ -39,11 +44,14 @@ type Querier interface {
 	GetTopDonorsByOrganization(ctx context.Context, arg *GetTopDonorsByOrganizationParams) ([]*GetTopDonorsByOrganizationRow, error)
 	GetTopDonorsByProject(ctx context.Context, arg *GetTopDonorsByProjectParams) ([]*GetTopDonorsByProjectRow, error)
 	GetTotalDonationsReport(ctx context.Context) (*GetTotalDonationsReportRow, error)
+	ListOrganizationRequests(ctx context.Context) ([]*OrganizationRequest, error)
+	ListOrganizationRequestsByStatus(ctx context.Context, status NullOrganizationRequestStatus) ([]*OrganizationRequest, error)
 	ListOrganizations(ctx context.Context) ([]*Organization, error)
 	ListProjects(ctx context.Context) ([]*Project, error)
 	UpdateDonationPaymentStatus(ctx context.Context, arg *UpdateDonationPaymentStatusParams) (*Donation, error)
 	UpdateDonationPaymentStatusByOrderID(ctx context.Context, arg *UpdateDonationPaymentStatusByOrderIDParams) (*Donation, error)
 	UpdateOrganization(ctx context.Context, arg *UpdateOrganizationParams) (*Organization, error)
+	UpdateOrganizationRequestStatus(ctx context.Context, arg *UpdateOrganizationRequestStatusParams) (*OrganizationRequest, error)
 	UpdateProject(ctx context.Context, arg *UpdateProjectParams) (*Project, error)
 }
 

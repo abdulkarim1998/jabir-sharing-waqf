@@ -134,3 +134,16 @@ type CreatePaymentConfigurationRequest struct {
 	TerminalID     string    `json:"terminal_id"`
 	GatewayURL     string    `json:"gateway_url" validate:"omitempty,url"`
 }
+
+// Organization request requests
+type CreateOrganizationRequestRequest struct {
+	Name        string   `json:"name" validate:"required,max=200"`
+	Phone       string   `json:"phone" validate:"required"`
+	CR          string   `json:"cr" validate:"required,max=100"`
+	Description string   `json:"description"`
+	Documents   []string `json:"documents"`
+}
+
+type UpdateOrganizationRequestStatusRequest struct {
+	Status string `json:"status" validate:"required,oneof=pending approved rejected"`
+}

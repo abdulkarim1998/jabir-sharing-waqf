@@ -196,3 +196,23 @@ type DonationTypesReportResponse struct {
 	TotalDonations int64           `json:"total_donations"`
 	TotalAmount    decimal.Decimal `json:"total_amount"`
 }
+
+// Organization request responses
+type OrganizationRequestDocumentResponse struct {
+	ID           uuid.UUID `json:"id"`
+	DocumentPath string    `json:"document_path"`
+	DocumentURL  string    `json:"document_url"`
+	CreatedDate  time.Time `json:"created_date"`
+}
+
+type OrganizationRequestResponse struct {
+	ID           uuid.UUID                             `json:"id"`
+	Name         string                                `json:"name"`
+	Phone        string                                `json:"phone"`
+	CR           string                                `json:"cr"`
+	Description  *string                               `json:"description"`
+	Status       string                                `json:"status"`
+	Documents    []OrganizationRequestDocumentResponse `json:"documents,omitempty"`
+	CreatedDate  time.Time                             `json:"created_date"`
+	ModifiedDate time.Time                             `json:"modified_date"`
+}

@@ -64,6 +64,7 @@ func main() {
 	dashboardHandler := handlers.NewDashboardHandler(queries)
 	uploadHandler := handlers.NewUploadHandler(minioConfig)
 	paymentHandler := handlers.NewPaymentHandler(paymentService, queries, validator)
+	organizationRequestHandler := handlers.NewOrganizationRequestHandler(queries, validator, minioConfig)
 
 	// Initialize Fiber app
 	app := fiber.New(fiber.Config{
@@ -90,7 +91,7 @@ func main() {
 	}))
 
 	// Routes
-	setupRoutes(app, organizationHandler, projectHandler, donationHandler, dashboardHandler, uploadHandler, paymentHandler)
+	setupRoutes(app, organizationHandler, projectHandler, donationHandler, dashboardHandler, uploadHandler, paymentHandler, organizationRequestHandler)
 
 	// Start server
 	go func() {
@@ -145,6 +146,7 @@ func setupRoutes(
 	dashboardHandler *handlers.DashboardHandler,
 	uploadHandler *handlers.UploadHandler,
 	paymentHandler *handlers.PaymentHandler,
+	organizationRequestHandler *handlers.OrganizationRequestHandler,
 ) {
 	// API v1 routes
 	api := app.Group("/api")
@@ -203,4 +205,11 @@ func setupRoutes(
 	payments := api.Group("/payments")
 	payments.Post("/initiate", paymentHandler.InitiatePayment)
 	payments.Post("/callback", paymentHandler.HandleCallback)
+
+	// Organization request routes
+	orgRequests := api.Group("/organization-requests")
+	orgRequests.Post("/", organizationRequestHandler.CreateOrganizationRequest)
+	orgRequests.Get("/", organizationRequestHandler.GetOrganizationRequests)
+	orgRequests.Get("/:id", organizationRequestHandler.GetOrganizationRequest)
+	orgRequests.Put("/:id/status", organizationRequestHandler.UpdateOrganizationRequestStatus)
 }

@@ -13,6 +13,67 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type OrganizationRequestStatus string
+
+const (
+	OrganizationRequestStatusPending  OrganizationRequestStatus = "pending"
+	OrganizationRequestStatusApproved OrganizationRequestStatus = "approved"
+	OrganizationRequestStatusRejected OrganizationRequestStatus = "rejected"
+)
+
+func (e *OrganizationRequestStatus) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = OrganizationRequestStatus(s)
+	case string:
+		*e = OrganizationRequestStatus(s)
+	default:
+		return fmt.Errorf("unsupported scan type for OrganizationRequestStatus: %T", src)
+	}
+	return nil
+}
+
+type NullOrganizationRequestStatus struct {
+	OrganizationRequestStatus OrganizationRequestStatus `json:"organization_request_status"`
+	Valid                     bool                      `json:"valid"` // Valid is true if OrganizationRequestStatus is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullOrganizationRequestStatus) Scan(value interface{}) error {
+	if value == nil {
+		ns.OrganizationRequestStatus, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.OrganizationRequestStatus.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullOrganizationRequestStatus) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.OrganizationRequestStatus), nil
+}
+
+func (e OrganizationRequestStatus) Valid() bool {
+	switch e {
+	case OrganizationRequestStatusPending,
+		OrganizationRequestStatusApproved,
+		OrganizationRequestStatusRejected:
+		return true
+	}
+	return false
+}
+
+func AllOrganizationRequestStatusValues() []OrganizationRequestStatus {
+	return []OrganizationRequestStatus{
+		OrganizationRequestStatusPending,
+		OrganizationRequestStatusApproved,
+		OrganizationRequestStatusRejected,
+	}
+}
+
 type PaymentStatus string
 
 const (
@@ -116,6 +177,24 @@ type Organization struct {
 	Image        *string   `json:"image"`
 	CreatedDate  time.Time `json:"created_date"`
 	ModifiedDate time.Time `json:"modified_date"`
+}
+
+type OrganizationRequest struct {
+	ID           uuid.UUID                     `json:"id"`
+	Name         string                        `json:"name"`
+	Phone        string                        `json:"phone"`
+	Cr           string                        `json:"cr"`
+	Description  *string                       `json:"description"`
+	Status       NullOrganizationRequestStatus `json:"status"`
+	CreatedDate  time.Time                     `json:"created_date"`
+	ModifiedDate time.Time                     `json:"modified_date"`
+}
+
+type OrganizationRequestDocument struct {
+	ID           uuid.UUID   `json:"id"`
+	RequestID    pgtype.UUID `json:"request_id"`
+	DocumentPath string      `json:"document_path"`
+	CreatedDate  time.Time   `json:"created_date"`
 }
 
 type PaymentConfiguration struct {
